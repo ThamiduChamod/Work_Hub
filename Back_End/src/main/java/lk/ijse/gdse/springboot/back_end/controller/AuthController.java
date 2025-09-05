@@ -4,6 +4,7 @@ package lk.ijse.gdse.springboot.back_end.controller;
 import jakarta.security.auth.message.AuthStatus;
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
 import lk.ijse.gdse.springboot.back_end.dto.AuthDTO;
+import lk.ijse.gdse.springboot.back_end.dto.OtpDTO;
 import lk.ijse.gdse.springboot.back_end.dto.UserDto;
 import lk.ijse.gdse.springboot.back_end.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<APIResponse> login(@RequestBody AuthDTO authDTO) {
         return ResponseEntity.ok(new APIResponse(200, "OK", authService.authenticate(authDTO)));
+    }
+
+    @PostMapping("/register/otp")
+    public void registerOTP(@RequestBody OtpDTO otpDTO) {
+        authService.sendOTP(otpDTO);
     }
 }
