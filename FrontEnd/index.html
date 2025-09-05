@@ -18,15 +18,23 @@
                 <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-
             </div>
             <span>or use your email for registration</span>
-            <input type="text" placeholder="Name" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button>Sign Up</button>
+            <input id="nameText" type="text" placeholder="Name" />
+            <div class="email-container">
+                <input id="emailText" type="email" placeholder="Email"  />
+                <button type="button" id="sendOtpBtn">Send OTP</button>
+            </div>
+            <input id="otpText" type="text" placeholder="OTP" />
+            <input id="passwordText" type="password" placeholder="Password" />
+            <input id="confirmPasswordText" type="password" placeholder="Confirm Password" />
+
+
+            <button id="signup_btn">Sign Up</button>
         </form>
     </div>
+
+
     <div class="form-container sign-in-container">
         <form action="#">
             <h1>Sign in</h1>
@@ -39,7 +47,7 @@
             <input type="email" placeholder="Email" />
             <input type="password" placeholder="Password" />
             <a href="#">Forgot your password?</a>
-            <button>Sign In</button>
+            <button id="signBtn">Sign In</button>
         </form>
     </div>
     <div class="overlay-container">
@@ -66,6 +74,7 @@
 <!--    <a target="_blank" href="https://www.florin-pop.com/blog/2019/03/double-slider-sign-in-up-form/">here</a>.-->
 <!--  </p>-->
 <!--</footer>-->
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script src="js/indexJs.js"></script>
 </body>
 </html>
