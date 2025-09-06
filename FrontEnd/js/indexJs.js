@@ -23,8 +23,8 @@ signUpButton.addEventListener('click', () => {
 
 signInButton.addEventListener('click', () => {
     container.classList.remove("right-panel-active");
-    signInEmail.val().clear();
-    signInPassword.val().clear();
+    // signInEmail.val().clear();
+    // signInPassword.val().clear();
 });
 
 
@@ -140,7 +140,6 @@ signup_btn.on("click", function () {
                     otpText.val("");
                     passwordText.val("");
                     confirmPasswordText.val("");
-                    console.log(req);
                     alert("sign up successfully");
 
                     localStorage.setItem("token", res.data);
@@ -180,7 +179,6 @@ signIn_btn.on("click", function () {
             signInEmail.val("");
             signInPassword.val("");
 
-            console.log(req);
             alert("sign up successfully");
 
             localStorage.setItem("token", res.data);
