@@ -43,7 +43,7 @@ public class AuthService {
                     .role(Role.valueOf(userDto.getRole()))
                     .build();
             userRepository.save(user);
-            String token = jwtUtil.generateToken(userDto.getUsername());
+            String token = jwtUtil.generateToken(userDto.getUsername(),userDto.getRole());
             return new AuthResponseDTO(token);
         }
         throw new RuntimeException("Username already exists");
@@ -57,7 +57,7 @@ public class AuthService {
             throw new RuntimeException("Wrong password");
         }
 
-        String token = jwtUtil.generateToken(authDTO.getUsername());
+        String token = jwtUtil.generateToken(authDTO.getUsername(), String.valueOf(byUsername.get().getRole()));
         return new AuthResponseDTO(token);
 
     }
