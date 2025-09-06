@@ -25,9 +25,9 @@
                 <input id="emailText" type="email" placeholder="Email"  />
                 <button type="button" id="sendOtpBtn">Send OTP</button>
             </div>
-            <input id="otpText" type="text" placeholder="OTP" />
-            <input id="passwordText" type="password" placeholder="Password" />
-            <input id="confirmPasswordText" type="password" placeholder="Confirm Password" />
+            <input id="otpText" type="text" placeholder="OTP" autocomplete="one-time-code">
+            <input id="passwordText" type="password" placeholder="Password" autocomplete="new-password">
+            <input id="confirmPasswordText" type="password" placeholder="Confirm Password" autocomplete="new-password">
 
 
             <button id="signup_btn">Sign Up</button>
@@ -44,10 +44,10 @@
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your account</span>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
+            <input id="signInEmail" type="email" placeholder="Email" autocomplete="username">
+            <input id="signInPassword" type="password" placeholder="Password" autocomplete="current-password">
             <a href="#">Forgot your password?</a>
-            <button id="signBtn">Sign In</button>
+            <button id="signIn_Btn">Sign In</button>
         </form>
     </div>
     <div class="overlay-container">
