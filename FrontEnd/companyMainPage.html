@@ -92,5 +92,114 @@
   </div>
 </section>
 
+<script>
+  // Navigation tabs functionality
+  document.addEventListener('DOMContentLoaded', function () {
+    const navItems = document.querySelectorAll('.nav-item');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', function () {
+        // Remove active class from all items
+        navItems.forEach(i => i.classList.remove('active'));
+        contentSections.forEach(s => s.classList.remove('active'));
+
+        // Add active class to clicked item
+        this.classList.add('active');
+
+        // Show corresponding content section
+        const target = this.getAttribute('data-target');
+        document.getElementById(target).classList.add('active');
+      });
+    });
+
+
+  });
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const navItems = document.querySelectorAll('.nav-item');
+    const contentSections = document.querySelectorAll('.content-section');
+    const jobModal = document.getElementById('jobModal');
+    const closeModal = document.querySelector('.close');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', function () {
+        const target = this.getAttribute('data-target');
+
+        // 👉 Handle navigation
+        if (target === 'posts') {
+          window.location.href = 'jobPost.html'; // Redirect to posts page
+          return;
+        }
+        if (target === 'add') {
+          window.location.href = 'createJobPost.html'; // Redirect to add post page
+          return;
+        }
+
+        // Remove active classes
+        navItems.forEach(i => i.classList.remove('active'));
+        contentSections.forEach(s => s.classList.remove('active'));
+
+        // Add active to clicked nav
+        this.classList.add('active');
+
+        // About section
+        if (target === 'about') {
+          jobModal.style.display = 'block';
+        } else {
+          document.getElementById(target).classList.add('active');
+        }
+      });
+    });
+
+    // Close modal
+    if (closeModal) {
+      closeModal.addEventListener('click', function () {
+        jobModal.style.display = 'none';
+      });
+    }
+
+    window.addEventListener('click', function (e) {
+      if (e.target === jobModal) {
+        jobModal.style.display = 'none';
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    // Dropdown toggle
+    const menuIcon = document.querySelector('.menu-icon');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    menuIcon.addEventListener('click', function (e) {
+      e.stopPropagation(); // prevent closing instantly
+      dropdownMenu.style.display =
+              dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function (e) {
+      if (!menuIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.style.display = 'none';
+      }
+    });
+
+    // Dropdown actions
+    document.querySelector('.dropdown-item:not(.logout)').addEventListener('click', function () {
+      window.location.href = 'editProfile.html'; // redirect to Edit Profile page
+    });
+
+    document.querySelector('.dropdown-item.logout').addEventListener('click', function () {
+      // Example: redirect to login page
+      window.location.href = 'login.html';
+      // Or: clear localStorage/sessionStorage if needed
+      // localStorage.clear();
+    });
+  });
+
+
+
+</script>
+
 </body>
 </html>
