@@ -211,5 +211,191 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contacts = document.querySelectorAll('.contact');
+        const chatHeader = document.querySelector('.chat-header');
+        const chatMessages = document.querySelector('.chat-messages');
+        const chatInput = document.querySelector('.chat-input');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const contactsSidebar = document.querySelector('.contacts-sidebar');
+
+        // Store conversations for each contact
+        const conversations = {
+            saman: [
+                { sender: 'them', text: 'Hey! How\'s it going?', time: '2:30 PM' },
+                { sender: 'you', text: 'Hi Saman! I\'m doing great. Just finished the project.', time: '2:32 PM' },
+                { sender: 'them', text: 'That\'s awesome! Can you send me the files when you have a moment?', time: '2:35 PM' },
+                { sender: 'you', text: 'Sure thing! I\'ll email them to you in a bit.', time: '2:36 PM' },
+                { sender: 'them', text: 'Thanks! Also, are we still meeting tomorrow?', time: '2:40 PM' },
+                { sender: 'you', text: 'Yes, 3 PM at the usual coffee place. See you then! 😊', time: '2:42 PM' }
+            ],
+            kamal: [
+                { sender: 'them', text: 'Hi, did you get a chance to review the proposal?', time: '10:15 AM' },
+                { sender: 'you', text: 'Yes, I went through it yesterday. Looks good overall!', time: '10:20 AM' },
+                { sender: 'them', text: 'Great! Any specific feedback?', time: '10:22 AM' },
+                { sender: 'you', text: 'Just a few minor suggestions. I\'ll send them over today.', time: '10:25 AM' }
+            ],
+            nimal: [
+                { sender: 'them', text: 'Are you available for a quick call?', time: '12:15 PM' },
+                { sender: 'you', text: 'I can talk in about 30 minutes. Will that work?', time: '12:18 PM' },
+                { sender: 'them', text: 'Perfect! Talk to you then.', time: '12:20 PM' }
+            ],
+            sachini: [
+                { sender: 'you', text: 'Hi Sachini, did you need help with something?', time: '3:45 PM' },
+                { sender: 'them', text: 'Yes, thanks for asking! I had a question about the design.', time: '3:50 PM' },
+                { sender: 'you', text: 'Happy to help! What\'s the question?', time: '3:52 PM' }
+            ],
+            amal: [
+                { sender: 'them', text: 'Let\'s meet next week to discuss the project', time: '9:30 AM' },
+                { sender: 'you', text: 'Sure, what day works best for you?', time: '9:35 AM' },
+                { sender: 'them', text: 'How about Tuesday afternoon?', time: '9:40 AM' }
+            ],
+            priya: [
+                { sender: 'them', text: 'Did you see my message about the event?', time: '4:30 PM' },
+                { sender: 'you', text: 'Not yet, let me check.', time: '4:35 PM' },
+                { sender: 'them', text: 'It\'s about the conference next month.', time: '4:40 PM' }
+            ],
+            dilshan: [
+                { sender: 'them', text: 'The meeting is confirmed for 10 AM', time: '11:15 AM' },
+                { sender: 'you', text: 'Great! I\'ll prepare the presentation.', time: '11:20 AM' },
+                { sender: 'them', text: 'Perfect. Looking forward to it.', time: '11:25 AM' }
+            ]
+        };
+
+        // Function to load a conversation
+        function loadConversation(contactId) {
+            const conversation = conversations[contactId];
+
+            // Clear current messages
+            chatMessages.innerHTML = '';
+
+            // Add messages to chat
+            conversation.forEach(msg => {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', msg.sender === 'you' ? 'sent' : 'received');
+                messageElement.innerHTML = `
+                        <div class="message-content">
+                            <p>${msg.text}</p>
+                            <div class="message-time">${msg.time}</div>
+                        </div>
+                    `;
+                chatMessages.appendChild(messageElement);
+            });
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Update chat header with contact info
+            const contactName = document.querySelector(`.contact[data-contact="${contactId}"] .contact-name`).textContent;
+            const contactAvatar = document.querySelector(`.contact[data-contact="${contactId}"] .contact-avatar`).textContent;
+
+            document.querySelector('.chat-user-info .user-name').textContent = contactName;
+            document.querySelector('.chat-user-info .user-avatar').textContent = contactAvatar;
+
+            // On mobile, close sidebar after selecting a contact
+            if (window.innerWidth <= 600) {
+                contactsSidebar.classList.remove('active');
+            }
+        }
+
+        // Add click event to contacts
+        contacts.forEach(contact => {
+            contact.addEventListener('click', function() {
+                // Remove active class from all contacts
+                contacts.forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked contact
+                this.classList.add('active');
+
+                // Load the conversation
+                const contactId = this.getAttribute('data-contact');
+                loadConversation(contactId);
+            });
+        });
+
+        // Toggle sidebar on mobile
+        menuToggle.addEventListener('click', function() {
+            contactsSidebar.classList.toggle('active');
+        });
+
+        // Send message functionality
+        const messageInput = document.querySelector('.chat-input input');
+        const sendButton = document.querySelector('.send-button');
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                const now = new Date();
+                const time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'sent');
+                messageElement.innerHTML = `
+                        <div class="message-content">
+                            <p>${message}</p>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    `;
+                chatMessages.appendChild(messageElement);
+                messageInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Simulate reply after a short delay
+                setTimeout(simulateReply, 1000);
+            }
+        }
+
+        function simulateReply() {
+            const replies = [
+                "Okay, sounds good!",
+                "I'll get back to you on that.",
+                "Thanks for letting me know!",
+                "Can we discuss this later?",
+                "I appreciate your help with this."
+            ];
+            const reply = replies[Math.floor(Math.random() * replies.length)];
+            const now = new Date();
+            const time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'received');
+            messageElement.innerHTML = `
+                    <div class="message-content">
+                        <p>${reply}</p>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Event listeners for sending messages
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Make the chat area take full height
+        function adjustLayout() {
+            const headerHeight = document.querySelector('.chat-header').offsetHeight;
+            const inputHeight = document.querySelector('.chat-input').offsetHeight;
+            const messagesContainer = document.querySelector('.chat-messages');
+
+            messagesContainer.style.height = `calc(100% - ${headerHeight + inputHeight}px)`;
+        }
+
+        // Initial adjustment
+        adjustLayout();
+
+        // Adjust on window resize
+        window.addEventListener('resize', adjustLayout);
+    });
+</script>
+
 </body>
 </html>
