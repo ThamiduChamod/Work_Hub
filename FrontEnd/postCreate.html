@@ -221,5 +221,90 @@
     <!--    </footer>-->
 </div>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set current date
+        const now = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('previewDate').textContent = `Posted on ${now.toLocaleDateString('en-US', options)}`;
+
+        // Skills functionality
+        const skillInput = document.getElementById('skillInput');
+        const addSkillBtn = document.getElementById('addSkillBtn');
+        const skillsList = document.getElementById('skillsList');
+        let skills = [];
+
+        addSkillBtn.addEventListener('click', function() {
+            const skill = skillInput.value.trim();
+            if (skill) {
+                skills.push(skill);
+                updateSkillsPreview();
+
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag';
+                skillTag.innerHTML = `
+                        ${skill}
+                        <span class="skill-remove" data-skill="${skill}">&times;</span>
+                    `;
+
+                skillTag.querySelector('.skill-remove').addEventListener('click', function() {
+                    const skillToRemove = this.getAttribute('data-skill');
+                    skills = skills.filter(s => s !== skillToRemove);
+                    updateSkillsPreview();
+                    skillsList.removeChild(skillTag);
+                });
+
+                skillsList.appendChild(skillTag);
+                skillInput.value = '';
+            }
+        });
+
+        function updateSkillsPreview() {
+            document.getElementById('previewSkills').textContent = skills.join(', ');
+        }
+
+        // Form input listeners for live preview
+        const formInputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+        formInputs.forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+
+        function updatePreview() {
+            // Company info
+            const companyLogo = document.querySelector('input[placeholder*="Company Logo Initials"]');
+            const companyName = document.querySelector('input[placeholder*="Company Name"]');
+
+            if (companyLogo.value) document.getElementById('previewLogo').textContent = companyLogo.value;
+            if (companyName.value) document.getElementById('previewCompany').textContent = companyName.value;
+
+            // Job details
+            const location = document.querySelector('input[placeholder*="Location"]');
+            const experience = document.querySelector('input[placeholder*="Experience Required"]');
+            const salary = document.querySelector('input[placeholder*="Salary Range"]');
+            const jobType = document.querySelector('select');
+            const workMode = document.querySelectorAll('select')[1];
+            const jobText = document.querySelector('textarea');
+            const imageUrl = document.querySelector('input[type="url"]');
+
+            if (location.value) document.getElementById('previewLocation').textContent = location.value;
+            if (experience.value) document.getElementById('previewExperience').textContent = experience.value;
+            if (salary.value) document.getElementById('previewSalary').textContent = salary.value;
+            if (jobType.value) document.getElementById('previewJobType').textContent = jobType.value;
+            if (workMode.value) document.getElementById('previewWorkMode').textContent = workMode.value;
+            if (jobText.value) document.getElementById('previewText').textContent = jobText.value;
+            if (imageUrl.value) document.getElementById('previewImage').src = imageUrl.value;
+        }
+
+        // Form submission
+        const jobPostForm = document.getElementById('jobPostForm');
+
+        jobPostForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Job post created successfully!');
+            // In a real application, you would send the form data to a server here
+        });
+    });
+</script>
 </body>
 </html>
