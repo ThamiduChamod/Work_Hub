@@ -196,6 +196,16 @@
       // localStorage.clear();
     });
   });
+  document.addEventListener('DOMContentLoaded', function () {
+    const messageBtn = document.querySelector('.message-btn');
+
+    if (messageBtn) {
+      messageBtn.addEventListener('click', function () {
+        window.location.href = 'chat.html'; // redirect to chat page
+      });
+    }
+  });
+
 
 
 
