@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+<div class="menu-toggle">
+    <i class="fas fa-bars"></i>
+</div>
+
+<div class="messenger-container">
+    <!-- Contacts sidebar -->
+    <div class="contacts-sidebar">
+        <div class="sidebar-header">
+            <div class="user-info">
+                <div class="user-avatar">Y</div>
+                <div class="user-name">You</div>
+            </div>
+            <div class="sidebar-actions">
+                <i class="fas fa-status"></i>
+                <i class="fas fa-message"></i>
+                <i class="fas fa-ellipsis"></i>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search Messenger">
+            </div>
+        </div>
+
+        <div class="contacts-list">
+            <div class="contact active" data-contact="saman">
+                <div class="contact-avatar">
+                    S
+                    <div class="online-status"></div>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">Saman Perera</div>
+                    <div class="contact-preview">See you tomorrow!</div>
+                </div>
+                <div class="contact-meta">
+                    <div>2:45 PM</div>
+                    <div class="unread-count">3</div>
+                </div>
+            </div>
+
+            <div class="contact" data-contact="kamal">
+                <div class="contact-avatar">
+                    K
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">Kamal Silva</div>
+                    <div class="contact-preview">I sent you the documents</div>
+                </div>
+                <div class="contact-meta">
+                    <div>Yesterday</div>
+                </div>
+            </div>
+
+            <div class="contact" data-contact="nimal">
+                <div class="contact-avatar">
+                    N
+                    <div class="online-status"></div>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">Nimal Fernando</div>
+                    <div class="contact-preview">Are you available for a call?</div>
+                </div>
+                <div class="contact-meta">
+                    <div>12:30 PM</div>
+                    <div class="unread-count">1</div>
+                </div>
+            </div>
+
+            <div class="contact" data-contact="sachini">
+                <div class="contact-avatar">
+                    S
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">Sachini Perera</div>
+                    <div class="contact-preview">Thanks for your help!</div>
+                </div>
+                <div class="contact-meta">
+                    <div>Tuesday</div>
+                </div>
+            </div>
+
+            <div class="contact" data-contact="amal">
+                <div class="contact-avatar">
+                    A
+                    <div class="online-status"></div>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">Amal Rajapaksa</div>
+                    <div class="contact-preview">Let's meet next week</div>
+                </div>
+                <div class="contact-meta">
+                    <div>Monday</div>
+                </div>
+            </div>
+
+            <div class="contact" data-contact="priya">
+                <div class="contact-avatar">
+                    P
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">Priya Weerasinghe</div>
+                    <div class="contact-preview">Did you see my message?</div>
+                </div>
+                <div class="contact-meta">
+                    <div>Sunday</div>
+                </div>
+            </div>
+
+            <div class="contact" data-contact="dilshan">
+                <div class="contact-avatar">
+                    D
+                    <div class="online-status"></div>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">Dilshan Fernando</div>
+                    <div class="contact-preview">The meeting is confirmed</div>
+                </div>
+                <div class="contact-meta">
+                    <div>Saturday</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat area -->
+    <div class="chat-area">
+        <div class="chat-header">
+            <div class="chat-user-info">
+                <div class="user-avatar">S</div>
+                <div>
+                    <div class="user-name">Saman Perera</div>
+                    <div class="user-status">Active now</div>
+                </div>
+            </div>
+            <div class="chat-header-actions">
+                <i class="fas fa-phone-alt"></i>
+                <i class="fas fa-video"></i>
+                <i class="fas fa-info-circle"></i>
+            </div>
+        </div>
+
+        <div class="chat-messages">
+            <div class="message received">
+                <div class="message-content">
+                    <p>Hey! How's it going?</p>
+                    <div class="message-time">2:30 PM</div>
+                </div>
+            </div>
+
+            <div class="message sent">
+                <div class="message-content">
+                    <p>Hi Saman! I'm doing great. Just finished the project.</p>
+                    <div class="message-time">2:32 PM</div>
+                </div>
+            </div>
+
+            <div class="message received">
+                <div class="message-content">
+                    <p>That's awesome! Can you send me the files when you have a moment?</p>
+                    <div class="message-time">2:35 PM</div>
+                </div>
+            </div>
+
+            <div class="message sent">
+                <div class="message-content">
+                    <p>Sure thing! I'll email them to you in a bit.</p>
+                    <div class="message-time">2:36 PM</div>
+                </div>
+            </div>
+
+            <div class="message received">
+                <div class="message-content">
+                    <p>Thanks! Also, are we still meeting tomorrow?</p>
+                    <div class="message-time">2:40 PM</div>
+                </div>
+            </div>
+
+            <div class="message sent">
+                <div class="message-content">
+                    <p>Yes, 3 PM at the usual coffee place. See you then! 😊</p>
+                    <div class="message-time">2:42 PM</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input">
+            <div class="input-actions">
+                <i class="fas fa-plus-circle"></i>
+                <i class="fas fa-image"></i>
+                <i class="fas fa-gift"></i>
+            </div>
+
+            <div class="input-wrapper">
+                <input type="text" placeholder="Type a message...">
+            </div>
+
+            <button class="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
