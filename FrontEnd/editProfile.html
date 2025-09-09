@@ -240,5 +240,96 @@
   <!--    </footer>-->
 </div>
 
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Form input listeners for live preview
+    const formInputs = document.querySelectorAll('.form-input, .form-textarea');
+    formInputs.forEach(input => {
+      input.addEventListener('input', updatePreview);
+    });
+
+    // Avatar upload preview
+    const avatarUpload = document.getElementById('avatarUpload');
+    avatarUpload.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('avatarPreview').innerHTML = '';
+          document.getElementById('avatarPreview').style.backgroundImage = `url(${e.target.result})`;
+          document.getElementById('avatarPreview').style.backgroundSize = 'cover';
+          document.getElementById('avatarPreview').style.backgroundPosition = 'center';
+
+          document.getElementById('previewAvatar').innerHTML = '';
+          document.getElementById('previewAvatar').style.backgroundImage = `url(${e.target.result})`;
+          document.getElementById('previewAvatar').style.backgroundSize = 'cover';
+          document.getElementById('previewAvatar').style.backgroundPosition = 'center';
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+
+    // Banner upload preview
+    const bannerUpload = document.getElementById('bannerUpload');
+    bannerUpload.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('bannerPreview').innerHTML = '';
+          document.getElementById('bannerPreview').style.backgroundImage = `url(${e.target.result})`;
+          document.getElementById('bannerPreview').style.backgroundSize = 'cover';
+          document.getElementById('bannerPreview').style.backgroundPosition = 'center';
+
+          document.getElementById('previewBanner').innerHTML = '';
+          document.getElementById('previewBanner').style.backgroundImage = `url(${e.target.result})`;
+          document.getElementById('previewBanner').style.backgroundSize = 'cover';
+          document.getElementById('previewBanner').style.backgroundPosition = 'center';
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+
+    function updatePreview() {
+      // Basic info
+      document.getElementById('previewCompanyName').textContent = document.getElementById('companyName').value;
+      document.getElementById('previewTagline').textContent = document.getElementById('companyTagline').value;
+      document.getElementById('previewFollowers').textContent = document.getElementById('followersCount').value;
+
+      // About section
+      document.getElementById('previewOverview').textContent = document.getElementById('companyOverview').value;
+      document.getElementById('previewMission').textContent = document.getElementById('companyMission').value;
+      document.getElementById('previewVision').textContent = document.getElementById('companyVision').value;
+      document.getElementById('previewLocations').textContent = document.getElementById('companyLocations').value;
+
+      // Update avatar initials if no image
+      if (!document.getElementById('avatarPreview').style.backgroundImage ||
+              document.getElementById('avatarPreview').style.backgroundImage === 'none') {
+        const companyName = document.getElementById('companyName').value;
+        if (companyName) {
+          const initials = companyName.split(' ').map(word => word[0]).join('').toUpperCase();
+          document.getElementById('avatarPreview').innerHTML = initials.substring(0, 2);
+          document.getElementById('previewAvatar').innerHTML = initials.substring(0, 2);
+        }
+      }
+    }
+
+    // Form submission
+    const profileForm = document.getElementById('profileForm');
+
+    profileForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Profile updated successfully!');
+      // In a real application, you would send the form data to a server here
+    });
+
+    // Cancel button
+    document.querySelector('.cancel-btn').addEventListener('click', function() {
+      if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
+        window.location.reload();
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
