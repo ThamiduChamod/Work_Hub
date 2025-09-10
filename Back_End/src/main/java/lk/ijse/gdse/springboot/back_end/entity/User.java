@@ -20,4 +20,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    // One-to-One mapping to CompanyProfile
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private CompanyProfile companyProfile;
 }
