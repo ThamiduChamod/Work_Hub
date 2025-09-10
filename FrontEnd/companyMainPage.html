@@ -120,52 +120,32 @@
   document.addEventListener('DOMContentLoaded', function () {
     const navItems = document.querySelectorAll('.nav-item');
     const contentSections = document.querySelectorAll('.content-section');
-    const jobModal = document.getElementById('jobModal');
-    const closeModal = document.querySelector('.close');
 
     navItems.forEach(item => {
       item.addEventListener('click', function () {
         const target = this.getAttribute('data-target');
 
-        // 👉 Handle navigation
+        // Redirects
         if (target === 'posts') {
-          window.location.href = 'post.html'; // Redirect to posts page
+          window.location.href = 'post.html';
           return;
         }
         if (target === 'add') {
-          window.location.href = 'postCreate.html'; // Redirect to add post page
+          window.location.href = 'postCreate.html';
           return;
         }
 
-        // Remove active classes
+        // Reset active
         navItems.forEach(i => i.classList.remove('active'));
         contentSections.forEach(s => s.classList.remove('active'));
 
-        // Add active to clicked nav
+        // Activate clicked tab + section
         this.classList.add('active');
-
-        // About section
-        if (target === 'about') {
-          jobModal.style.display = 'block';
-        } else {
-          document.getElementById(target).classList.add('active');
-        }
+        document.getElementById(target).classList.add('active');
       });
-    });
-
-    // Close modal
-    if (closeModal) {
-      closeModal.addEventListener('click', function () {
-        jobModal.style.display = 'none';
-      });
-    }
-
-    window.addEventListener('click', function (e) {
-      if (e.target === jobModal) {
-        jobModal.style.display = 'none';
-      }
     });
   });
+
   document.addEventListener('DOMContentLoaded', function () {
     // Dropdown toggle
     const menuIcon = document.querySelector('.menu-icon');
@@ -191,7 +171,7 @@
 
     document.querySelector('.dropdown-item.logout').addEventListener('click', function () {
       // Example: redirect to login page
-      window.location.href = 'login.html';
+      window.location.href = 'index.html';
       // Or: clear localStorage/sessionStorage if needed
       // localStorage.clear();
     });
