@@ -50,19 +50,26 @@ public class AuthController {
     }
 
     @PostMapping("/otpValidate")
-    public ResponseEntity<APIResponse> registerOTPValidate(@RequestBody ValidateOTPDTO validateOTPDTO) {
+    public boolean registerOTPValidate(@RequestBody ValidateOTPDTO validateOTPDTO) {
 
         validateOTPDTO.setTime(LocalDateTime.now());
+        System.out.println("   ");
+        System.out.println("   ");
+        System.out.println("   ");
+        System.out.println("   ");
+        System.out.println("   ");
+        System.out.println("   ");
         System.out.println(validateOTPDTO);
 
-        return ResponseEntity.ok(
-                new APIResponse(
-                        200,
-                        "OTP Validate Successfully",
-                        authService.validateOTP(validateOTPDTO)
-                )
-        );
+//        return ResponseEntity.ok(
+//                new APIResponse(
+//                        200,
+//                        "OTP Validate Successfully",
+//                        authService.validateOTP(validateOTPDTO)
+//                )
+//        );
 
+        return authService.validateOTP(validateOTPDTO);
     }
 
 

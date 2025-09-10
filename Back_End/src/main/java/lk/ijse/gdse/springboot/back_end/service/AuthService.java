@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -80,7 +81,8 @@ public class AuthService {
         System.out.println(otpDTO.getEmail());
         simpleMailMessage.setTo(otpDTO.getEmail());
         simpleMailMessage.setSubject("Your OTP Code");
-        String otp = String.valueOf(random.nextInt(10000)+1000);
+        SecureRandom random = new SecureRandom();
+        String otp = String.valueOf(1000 + random.nextInt(9000));
         simpleMailMessage.setText("Your OTP is: " +otp+"\nThis code will expire in 1 minutes.");
 
         try {
@@ -96,7 +98,7 @@ public class AuthService {
 
     }
 
-    public String validateOTP(ValidateOTPDTO validateOTPDTO){
+    public boolean validateOTP(ValidateOTPDTO validateOTPDTO){
         try {
             OTP otp = otpRepository.findByEmail(validateOTPDTO.getEmail());
 
@@ -104,13 +106,17 @@ public class AuthService {
 
                 Duration duration = Duration.between(otp.getTime(), validateOTPDTO.getTime());
                 if (duration.toMinutes() <= 1){
-                    return "OTP is valid";
+                    System.out.println("otp eka hari");
+                    return true;
+
                 }
-                return "End Time";
+                System.out.println("otp eka hari time out");
+
+                return false;
             }
-            return "Invalid OTP";
+            return false;
         } catch (RuntimeException e) {
-            return "Can't find email";
+            return false;
         }
 
     }
