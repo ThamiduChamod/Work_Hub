@@ -5,7 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,6 +47,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+
         filterChain.doFilter(request, response);
-    }
+    }// Add this method to extract the role from the token
+//    private String extractRole(String token) {
+//        return jwtUtil.extractRole(token);
+//    }
+
+//    private String jwtToken;
+//    // Then in your filter, you can verify the role
+//    String role = extractRole(jwtToken);
+//if (role != null && role.equals("ROLE_COMPANY")) {
+//        // Proceed with authentication
+//    }
+
+//    @Bean
+//    public GrantedAuthorityDefaults grantedAuthorityDefaults() {
+//        return new GrantedAuthorityDefaults(""); // Remove ROLE_ prefix
+//    }
+
 }

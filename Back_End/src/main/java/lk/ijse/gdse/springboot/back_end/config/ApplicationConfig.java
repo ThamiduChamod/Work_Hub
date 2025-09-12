@@ -32,6 +32,7 @@ public class ApplicationConfig {
                                 user.getPassword(),
                                 List.of(new SimpleGrantedAuthority("ROLE_"+user.getRole().name()))
 
+
                         )).orElseThrow(
                                 () -> new UsernameNotFoundException("user not found")
                 );

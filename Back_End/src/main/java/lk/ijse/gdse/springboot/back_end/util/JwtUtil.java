@@ -21,7 +21,7 @@ public class JwtUtil {
     public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role)
+                .claim("role","ROLE_"+ role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(
                         System.currentTimeMillis() + Long.parseLong(expiration)))
@@ -53,9 +53,9 @@ public class JwtUtil {
 //    public String extractUsername(String token) {
 //        return extractAllClaims(token).getSubject();
 //    }
-    public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
-    }
+//    public String extractRole(String token) {
+//        return extractAllClaims(token).get("role", String.class);
+//    }
 //    public boolean validateToken(String token) {
 //        try {
 //            extractAllClaims(token); // If parsing fails -> invalid

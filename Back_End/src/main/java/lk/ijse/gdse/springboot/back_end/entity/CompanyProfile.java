@@ -2,6 +2,8 @@ package lk.ijse.gdse.springboot.back_end.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Entity
 @Data
@@ -39,4 +41,9 @@ public class CompanyProfile {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     private User user;
+
+
+    public CompanyProfile(String banner, String companyName, String industry, String locations, String mission, String overview, String profile, String tagline, String vision, int id) {
+    }
 }
+

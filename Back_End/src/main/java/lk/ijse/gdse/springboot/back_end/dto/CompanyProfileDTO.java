@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,8 +25,8 @@ public class CompanyProfileDTO {
     private String overview;
     private String mission;
     private String vision;
-    private String locations;
-    private String profileImagePath;
-    private String bannerImagePath;
-    private User user;
+//    private List<String> locations;
+    private String profileImage;
+    private String bannerImage;
+    private String mali;
 }

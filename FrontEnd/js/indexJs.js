@@ -224,7 +224,7 @@ signIn_btn.on("click", function () {
             // alert("sign up successfully");
 
 
-            if (payload.role === "COMPANY") {
+            if (payload.role === "ROLE_COMPANY") {
                 window.location.assign("companyMainPage.html");
             } else if (payload.role === "USER") {
                 window.location.assign("UserHomePage.html");
