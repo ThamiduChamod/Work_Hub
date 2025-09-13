@@ -33,10 +33,15 @@ function setData(profile) {
 // profile object එකෙන් name එක set කිරීම
     $("#profileName").text(profile.companyName); // "TechCorp International" වැනි text set කරයි
     $("#profileTagline").text(profile.tagline);
+    let count = 0;
+    if (profile.followersCount === null){
+        count = 0;
+    }else count = profile.followersCount;
+    $("#followers").text(count+' followers'); // "TechCorp International" වැනි text set කරයි
     $("#profileOverview").text(profile.overview);
     $("#profileMission").text(profile.mission);
     $("#profileVision").text(profile.vision);
-    $("#location").text(profile.location);
+    $("#location").text(profile.locations);
     // $("#profileTagline").text(profile.tagline);
 
 }
