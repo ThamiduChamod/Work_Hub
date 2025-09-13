@@ -2,6 +2,7 @@ package lk.ijse.gdse.springboot.back_end.config;
 
 import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailSender;
@@ -54,5 +55,9 @@ public class ApplicationConfig {
     @Bean
     public JavaMailSenderImpl mailSender(){
         return new JavaMailSenderImpl();
+    }
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

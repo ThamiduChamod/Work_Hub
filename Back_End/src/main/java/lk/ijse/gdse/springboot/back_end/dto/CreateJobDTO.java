@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class CreateJobDTO {
-    private String companyName;
-    private String companyLogoInitials;
+
     private String jobTitle;
+    private String address;
     private String location;
     private String experienceRequired;
     private String salaryRange;
@@ -28,5 +28,5 @@ public class CreateJobDTO {
     private String jobDescription;
     private String jobImagePath;
     private LocalDateTime createdAt;
-    private User user;// foreign key
+    private String userName;// foreign key
 }

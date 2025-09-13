@@ -16,9 +16,8 @@ public class JobPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String companyName;
-    private String companyLogoInitials;
     private String jobTitle;
+    private String address;
     private String location;
     private String experienceRequired;
     private String salaryRange;
@@ -38,4 +37,8 @@ public class JobPost {
     @ManyToOne
     @JoinColumn(name = "username") // foreign key
     private User user;
+
+
+
+
 }

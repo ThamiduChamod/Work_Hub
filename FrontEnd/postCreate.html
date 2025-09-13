@@ -5,6 +5,38 @@
     <title>Add Post</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/postCreateCss.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+        <style>
+            /*h1 { text-align:center; color:#333; margin-bottom:20px; }*/
+        .form-section { margin-bottom:25px; }
+        /*.form-section h3 { color:#4CAF50; margin-bottom:10px; display:flex; align-items:center; gap:8px; }*/
+        .form-section textarea { width:100%; border-radius:8px; border:1px solid #ccc; padding:10px; font-size:14px; resize:none; }
+        .openMap { background:#4CAF50; color:#fff; border:none; padding:8px 16px; font-size:14px; border-radius:6px; cursor:pointer; transition:0.3s; }
+        .form-section button:hover { opacity:0.9; }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.6); animation: fadeInBg 0.3s ease; }
+        @keyframes fadeInBg { from{opacity:0;} to{opacity:1;} }
+        .modal-content { background:#fff; margin:5% auto; padding:15px; width:90%; max-width:1200px; max-height:100vh; overflow-y:auto; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: scaleIn 0.3s ease; position:relative; }
+        @keyframes scaleIn { from{transform:scale(0.95); opacity:0;} to{transform:scale(1); opacity:1;} }
+
+        .close { position:absolute; top:15px; right:20px; font-size:24px; font-weight:bold; cursor:pointer; color:#333; transition:0.3s; }
+        .close:hover { color:#f44336; }
+
+        #map { height: 65vh; width: 100%; border-radius:10px; border:1px solid #ccc; margin-bottom:15px; }
+
+        #controls { text-align:center; margin-top:10px; display:flex; justify-content:center; gap:12px; }
+        #controls button { padding:8px 16px; font-size:14px; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s; }
+        #setLocationBtn { background:#4CAF50; color:#fff; border:none; }
+        #setLocationBtn:hover { opacity:0.9; }
+        #clearBtn { background:#f44336; color:#fff; border:none; }
+        #clearBtn:hover { opacity:0.9; }
+
+        /* Popup marker custom style */
+        .leaflet-popup-content-wrapper { border-radius:8px; border:1px solid #4CAF50; }
+        .leaflet-popup-content { font-size:14px; line-height:1.4; }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -25,21 +57,22 @@
     <div class="form-container">
         <form id="jobPostForm">
             <!-- Company Information -->
-            <div class="form-section">
-                <h3 class="section-title"><i class="fas fa-building"></i> Company Information</h3>
+<!--            <div class="form-section">-->
+<!--                <h3 class="section-title"><i class="fas fa-building"></i> Company Information</h3>-->
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Company Name</label>
-                        <input type="text" class="form-input" placeholder="e.g. TechCorp International" required>
-                    </div>
+<!--                <div class="form-row">-->
+<!--                    <div class="form-group">-->
+<!--                        <label class="form-label">Company Name</label>-->
+<!--                        <input type="text" class="form-input" placeholder="e.g. TechCorp International" required>-->
+<!--                    </div>-->
 
-                    <div class="form-group">
-                        <label class="form-label">Company Logo Initials</label>
-                        <input type="text" class="form-input" placeholder="e.g. TC" maxlength="2" required>
-                    </div>
-                </div>
-            </div>
+<!--                    <div class="form-group">-->
+<!--                        <label class="form-label">Company Logo Initials</label>-->
+<!--                        <input type="text" class="form-input" placeholder="e.g. TC" maxlength="2" required>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
 
             <!-- Job Details -->
             <div class="form-section">
@@ -48,31 +81,35 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Job Title</label>
-                        <input type="text" class="form-input" placeholder="e.g. Senior Frontend Developer" required>
+                        <input id="jobTitle" type="text" class="form-input" placeholder="e.g. Senior Frontend Developer" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Location</label>
-                        <input type="text" class="form-input" placeholder="e.g. New York, USA" required>
+                        <input id="address" type="text" class="form-input" placeholder="Address e.g. New York, USA" required>
+                        <button type="button" class="openMap" onclick="openModal()">Select Locations on Map</button>
+                        <textarea hidden="hidden" readonly  id="jobLocations" class="form-input" placeholder="e.g. New York, USA" rows="1">Headquartered in San Francisco, with offices in New York, London, Tokyo, and Sydney. Our global presence allows us to serve clients around the world with localized support.</textarea>
+
+
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Experience Required</label>
-                        <input type="text" class="form-input" placeholder="e.g. 5+ yrs Exp." required>
+                        <input id="experience" type="text" class="form-input" placeholder="e.g. 5+ yrs Exp." required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Salary Range</label>
-                        <input type="text" class="form-input" placeholder="e.g. $120k - $150k" required>
+                        <input id="salary" type="text" class="form-input" placeholder="e.g. $120k - $150k" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Job Type</label>
-                        <select class="form-select" required>
+                        <select id="jobType" class="form-select" required>
                             <option value="">Select job type</option>
                             <option value="Full-time">Full-time</option>
                             <option value="Part-time">Part-time</option>
@@ -84,7 +121,7 @@
 
                     <div class="form-group">
                         <label class="form-label">Work Mode</label>
-                        <select class="form-select" required>
+                        <select id="workMode" class="form-select" required>
                             <option value="">Select work mode</option>
                             <option value="On-site">On-site</option>
                             <option value="Remote">Remote</option>
@@ -100,7 +137,7 @@
 
                 <div class="skills-input-container">
                     <input type="text" id="skillInput" class="form-input" placeholder="Add a skill (e.g. React)">
-                    <button type="button" class="add-btn" id="addSkillBtn">Add Skill</button>
+<!--                    <button type="button" class="add-btn" id="addSkillBtn">Add Skill</button>-->
                 </div>
 
                 <div class="skills-list" id="skillsList">
@@ -114,16 +151,19 @@
 
                 <div class="form-group">
                     <label class="form-label">Job Post Content</label>
-                    <textarea class="form-textarea" placeholder="Describe the job position and any exciting news..." rows="4" required></textarea>
+                    <textarea id="jobContent" class="form-textarea" placeholder="Describe the job position and any exciting news..." rows="4" required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Job Post Image URL (Optional)</label>
                     <div>
                         <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="previewAndUploadImage(event, 'avatar')">
+                        <input type="hidden" id="hiddenBase64" name="postImage">
+
                         <button id="uploadProfilePhoto" type="button" class="upload-btn" onclick="document.getElementById('avatarUpload').click()">
                             <i class="fas fa-upload"></i> Upload post Image
                         </button>
+
 <!--                        <p style="color: #718096; font-size: 14px; margin-top: 8px;">Recommended: 300x300 pixels, JPG or PNG</p>-->
                     </div>
                 </div>
@@ -131,10 +171,21 @@
 
             <!-- Form Actions -->
             <div class="form-actions">
-                <button type="submit" class="submit-btn">Create Job Post</button>
+                <button id="post" type="submit" class="submit-btn">Create Job Post</button>
                 <button type="button" class="cancel-btn">Cancel</button>
             </div>
         </form>
+    </div>
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Select Locations</h3>
+            <div id="map"></div>
+            <div id="controls">
+                <button id="setLocationBtn">Set Locations</button>
+                <button id="clearBtn">Clear Locations</button>
+            </div>
+        </div>
     </div>
 
     <!--    &lt;!&ndash; Preview Section &ndash;&gt;-->
@@ -228,43 +279,49 @@
 </div>
 
 
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="js/CreatePostJs.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Set current date
         const now = new Date();
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('previewDate').textContent = `Posted on ${now.toLocaleDateString('en-US', options)}`;
+        // document.getElementById('previewDate').textContent = `Posted on ${now.toLocaleDateString('en-US', options)}`;
+        // document.getElementById("previewDate").textContent = "Posted now";
 
         // Skills functionality
-        const skillInput = document.getElementById('skillInput');
-        const addSkillBtn = document.getElementById('addSkillBtn');
-        const skillsList = document.getElementById('skillsList');
-        let skills = [];
-
-        addSkillBtn.addEventListener('click', function() {
-            const skill = skillInput.value.trim();
-            if (skill) {
-                skills.push(skill);
-                updateSkillsPreview();
-
-                const skillTag = document.createElement('div');
-                skillTag.className = 'skill-tag';
-                skillTag.innerHTML = `
-                        ${skill}
-                        <span class="skill-remove" data-skill="${skill}">&times;</span>
-                    `;
-
-                skillTag.querySelector('.skill-remove').addEventListener('click', function() {
-                    const skillToRemove = this.getAttribute('data-skill');
-                    skills = skills.filter(s => s !== skillToRemove);
-                    updateSkillsPreview();
-                    skillsList.removeChild(skillTag);
-                });
-
-                skillsList.appendChild(skillTag);
-                skillInput.value = '';
-            }
-        });
+        // const skillInput = document.getElementById('skillInput');
+        // const addSkillBtn = document.getElementById('addSkillBtn');
+        // const skillsList = document.getElementById('skillsList');
+        // let skills = [];
+        //
+        // addSkillBtn.addEventListener('click', function() {
+        //     const skill = skillInput.value.trim();
+        //     if (skill) {
+        //         skills.push(skill);
+        //         updateSkillsPreview();
+        //
+        //         const skillTag = document.createElement('div');
+        //         skillTag.className = 'skill-tag';
+        //         skillTag.innerHTML = `
+        //                 ${skill}
+        //                 <span class="skill-remove" data-skill="${skill}">&times;</span>
+        //             `;
+        //
+        //         skillTag.querySelector('.skill-remove').addEventListener('click', function() {
+        //             const skillToRemove = this.getAttribute('data-skill');
+        //             skills = skills.filter(s => s !== skillToRemove);
+        //             updateSkillsPreview();
+        //             skillsList.removeChild(skillTag);
+        //         });
+        //
+        //         skillsList.appendChild(skillTag);
+        //         skillInput.value = '';
+        //     }
+        // });
 
         function updateSkillsPreview() {
             document.getElementById('previewSkills').textContent = skills.join(', ');
@@ -311,6 +368,88 @@
             // In a real application, you would send the form data to a server here
         });
     });
+</script>
+<script>
+
+    var map = L.map('map').setView([7.8731, 80.7718], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:'© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var markers = [];
+    var selectedLocations = [];
+
+    // Geocoder Search
+    var geocoder = L.Control.geocoder({ defaultMarkGeocode: false })
+        .on('markgeocode', function(e) {
+            var center = e.geocode.center;
+            var name = e.geocode.name;
+            selectedLocations.push({name:name, lat:center.lat, lng:center.lng});
+            openModal();
+            map.setView(center, 12);
+        }).addTo(map);
+
+    // Manual click select
+    map.on('click', function(e){
+        selectedLocations.push({name:"Manual Selected", lat:e.latlng.lat, lng:e.latlng.lng});
+        openModal();
+    });
+
+    // Modal open/close
+    function openModal() {
+        document.getElementById("locationModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+        setTimeout(()=> {
+            map.invalidateSize();
+
+            // Clear old markers
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+
+            // Render all selected markers
+            selectedLocations.forEach(loc=>{
+                var marker = L.marker([loc.lat, loc.lng]).addTo(map)
+                    .bindPopup(loc.name + "<br>("+loc.lat.toFixed(4)+", "+loc.lng.toFixed(4)+")");
+                markers.push(marker);
+            });
+
+            // Fit map bounds to markers
+            if(markers.length>0){
+                var group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.2));
+            }
+
+        }, 300);
+    }
+
+    function closeModal() {
+        document.getElementById("locationModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+    // Set Locations
+    document.getElementById("setLocationBtn").addEventListener("click", function(){
+        if(selectedLocations.length>0){
+            let text = "";
+            selectedLocations.forEach((loc,i)=>{
+                text += (i+1)+". "+loc.name+" ("+loc.lat.toFixed(4)+", "+loc.lng.toFixed(4)+")\n";
+            });
+            document.getElementById("companyLocations").value = text;
+        } else {
+            document.getElementById("companyLocations").value = "No locations selected!";
+        }
+        closeModal();
+    });
+
+    // Clear Locations
+    document.getElementById("clearBtn").addEventListener("click", function(){
+        markers.forEach(m => map.removeLayer(m));
+        markers = [];
+        selectedLocations = [];
+    });
+
+
+
 </script>
 </body>
 </html>
