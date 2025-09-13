@@ -24,4 +24,5 @@ public class User {
     // One-to-One mapping to CompanyProfile
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private CompanyProfile companyProfile;
+
 }

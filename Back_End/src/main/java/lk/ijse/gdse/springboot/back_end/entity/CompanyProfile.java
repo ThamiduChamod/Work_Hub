@@ -43,7 +43,5 @@ public class CompanyProfile {
     private User user;
 
 
-    public CompanyProfile(String banner, String companyName, String industry, String locations, String mission, String overview, String profile, String tagline, String vision, int id) {
-    }
 }
 

@@ -189,7 +189,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-<!--<script src="js/EditProfileJs.js"></script>-->
+<script src="js/EditProfileJs.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -198,46 +198,77 @@
     formInputs.forEach(input => {
       input.addEventListener('input', updatePreview);
     });
-
-    // Avatar upload preview
+// Avatar upload preview
     const avatarUpload = document.getElementById('avatarUpload');
     avatarUpload.addEventListener('change', function(e) {
       if (e.target.files && e.target.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          document.getElementById('avatarPreview').innerHTML = '';
-          document.getElementById('avatarPreview').style.backgroundImage = `url(${e.target.result})`;
-          document.getElementById('avatarPreview').style.backgroundSize = 'cover';
-          document.getElementById('avatarPreview').style.backgroundPosition = 'center';
-
-          document.getElementById('previewAvatar').innerHTML = '';
-          document.getElementById('previewAvatar').style.backgroundImage = `url(${e.target.result})`;
-          document.getElementById('previewAvatar').style.backgroundSize = 'cover';
-          document.getElementById('previewAvatar').style.backgroundPosition = 'center';
+          const avatarPreview = document.getElementById('avatarPreview');
+          avatarPreview.innerHTML = '';
+          avatarPreview.style.backgroundImage = `url(${e.target.result})`;
+          avatarPreview.style.backgroundSize = 'cover';
+          avatarPreview.style.backgroundPosition = 'center';
         }
         reader.readAsDataURL(e.target.files[0]);
       }
     });
 
-    // Banner upload preview
+// Banner upload preview
     const bannerUpload = document.getElementById('bannerUpload');
     bannerUpload.addEventListener('change', function(e) {
       if (e.target.files && e.target.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          document.getElementById('bannerPreview').innerHTML = '';
-          document.getElementById('bannerPreview').style.backgroundImage = `url(${e.target.result})`;
-          document.getElementById('bannerPreview').style.backgroundSize = 'cover';
-          document.getElementById('bannerPreview').style.backgroundPosition = 'center';
-
-          document.getElementById('previewBanner').innerHTML = '';
-          document.getElementById('previewBanner').style.backgroundImage = `url(${e.target.result})`;
-          document.getElementById('previewBanner').style.backgroundSize = 'cover';
-          document.getElementById('previewBanner').style.backgroundPosition = 'center';
+          const bannerPreview = document.getElementById('bannerPreview');
+          bannerPreview.innerHTML = '';
+          bannerPreview.style.backgroundImage = `url(${e.target.result})`;
+          bannerPreview.style.backgroundSize = 'cover';
+          bannerPreview.style.backgroundPosition = 'center';
         }
         reader.readAsDataURL(e.target.files[0]);
       }
     });
+
+    // // Avatar upload preview
+    // const avatarUpload = document.getElementById('avatarUpload');
+    // avatarUpload.addEventListener('change', function(e) {
+    //   if (e.target.files && e.target.files[0]) {
+    //     const reader = new FileReader();
+    //     reader.onload = function(e) {
+    //       document.getElementById('avatarPreview').innerHTML = '';
+    //       document.getElementById('avatarPreview').style.backgroundImage = `url(${e.target.result})`;
+    //       document.getElementById('avatarPreview').style.backgroundSize = 'cover';
+    //       document.getElementById('avatarPreview').style.backgroundPosition = 'center';
+    //
+    //       document.getElementById('previewAvatar').innerHTML = '';
+    //       document.getElementById('previewAvatar').style.backgroundImage = `url(${e.target.result})`;
+    //       document.getElementById('previewAvatar').style.backgroundSize = 'cover';
+    //       document.getElementById('previewAvatar').style.backgroundPosition = 'center';
+    //     }
+    //     reader.readAsDataURL(e.target.files[0]);
+    //   }
+    // });
+    //
+    // // Banner upload preview
+    // const bannerUpload = document.getElementById('bannerUpload');
+    // bannerUpload.addEventListener('change', function(e) {
+    //   if (e.target.files && e.target.files[0]) {
+    //     const reader = new FileReader();
+    //     reader.onload = function(e) {
+    //       document.getElementById('bannerPreview').innerHTML = '';
+    //       document.getElementById('bannerPreview').style.backgroundImage = `url(${e.target.result})`;
+    //       document.getElementById('bannerPreview').style.backgroundSize = 'cover';
+    //       document.getElementById('bannerPreview').style.backgroundPosition = 'center';
+    //
+    //       document.getElementById('previewBanner').innerHTML = '';
+    //       document.getElementById('previewBanner').style.backgroundImage = `url(${e.target.result})`;
+    //       document.getElementById('previewBanner').style.backgroundSize = 'cover';
+    //       document.getElementById('previewBanner').style.backgroundPosition = 'center';
+    //     }
+    //     reader.readAsDataURL(e.target.files[0]);
+    //   }
+    // });
 
     function updatePreview() {
       // Basic info
@@ -380,147 +411,6 @@
 
 
 //   ------------------------------------------------
-
-
-
-  const saveBtn = $('#saveBtn');
-  const cancelBtn = $('#cancelBtn');
-  // Profile Image
-  const uploadProfilePhoto = $('#uploadProfilePhoto');
-  const uploadBannerImage = $("#uploadBannerImage");
-  //Basic Information
-  const companyName = $('#companyName');
-  const companyTagline = $('#companyTagline');
-  const companyIndustry = $('#companyIndustry');
-  // Company Overview
-  const companyOverview = $('#companyOverview');
-  const companyMission = $('#companyMission');
-  const companyVision = $('#companyVision');
-  const companyLocations = $('#companyLocations');
-
-
-
-  let profileImageBase64 = '';
-  let bannerImageBase64 = '';
-
-  function previewAndUploadImage(event, type) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const previewId = type === 'avatar' ? 'avatarPreview' : 'bannerPreview';
-      const previewElem = document.getElementById(previewId);
-      if(previewElem) {
-        previewElem.innerHTML = `<img src="${e.target.result}" alt="${type}" style="width:100%;height:100%;object-fit:cover;" />`;
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-  const token = localStorage.getItem("token");
-
-  $("#saveBtn").on("click", async function () {
-
-    function parseJwt (token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    };
-
-    console.log(parseJwt(localStorage.getItem("token")));
-
-
-    // const email = localStorage.getItem("email");
-    // console.log(token)
-    const email = 'thamiduchamode100@gmail.com'
-
-
-
-
-
-
-    const token = localStorage.getItem("token");
-    console.log(token)
-    const actualToken = token.startsWith('Bearer ') ? token.substring(7) : token;
-
-
-    fetch('http://localhost:8080/company/update', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + actualToken
-      },
-      // body: JSON.stringify({
-      //       companyName: companyName,
-      //       tagline: companyTagline,
-      //       industry: companyIndustry,
-      //       followersCount: "2",
-      //       overview: companyOverview,
-      //       mission: companyMission,
-      //       vision: companyVision,
-      //       // locations: selectedLocations,
-      //       profileImage: profileImageBase64,
-      //       bannerImage: bannerImageBase64,
-      //       mali: email
-      //     })
-    })
-            .then(response => {
-              if (response.status === 403) {
-                throw new Error('403 Forbidden - Check if your role is correctly set to ROLE_COMPANY');
-              }
-              if (!response.ok) {
-                throw new Error('HTTP error ' + response.status);
-              }
-              return response.json();
-            })
-
-
-
-
-
-
-    //
-    //
-    // if (!actualToken) {
-    //   showResult('Please enter a JWT token first', 'error');
-    //   return;
-    // }
-    // $.ajax({
-    //   url: "http://localhost:8080/company/update",
-    //   method: "POST",
-    //   contentType: "application/json",
-    //   headers: {
-    //     "Authorization": "Bearer " + actualToken
-    //   },
-    //   data: JSON.stringify({
-    //     companyName: companyName,
-    //     tagline: companyTagline,
-    //     industry: companyIndustry,
-    //     followersCount: "2",
-    //     overview: companyOverview,
-    //     mission: companyMission,
-    //     vision: companyVision,
-    //     locations: selectedLocations,
-    //     profileImage: profileImageBase64,
-    //     bannerImage: bannerImageBase64,
-    //     mali: email
-    //   }),
-    //   success: function(response) {
-    //     alert("Profile updated successfully!");
-    //     console.log(response);
-    //   },
-    //   error: function(xhr, status, error) {
-    //     // console.error(xhr.responseText);
-    //     alert("Failed to update profile.");
-    //   }
-    // });
-    //
-
-    // alert('Profile updated successfully!');
-  });
 
 
 

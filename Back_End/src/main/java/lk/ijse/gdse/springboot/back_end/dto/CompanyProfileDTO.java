@@ -18,15 +18,15 @@ import java.util.List;
 @ToString
 public class CompanyProfileDTO {
 
+    private String profileImage;
     private String companyName;
+    private String bannerImage;
     private String tagline;
     private String industry;
-    private String followersCount;
     private String overview;
     private String mission;
     private String vision;
-//    private List<String> locations;
-    private String profileImage;
-    private String bannerImage;
+    private String locations;
+//
     private String mali;
 }

@@ -27,14 +27,20 @@ public class CompanyService {
     private final UserRepository userRepository;
 
     public String saveOrUpdate(CompanyProfileDTO companyProfileDTO) {
-        User user = userRepository.findIdByUsername(companyProfileDTO.getMali());
+        System.out.println("companyProfileDTO: " + companyProfileDTO);
+        System.out.println(companyProfileDTO);
+        Optional <User> optionalUser = userRepository.findByUsername("thamiduchamod100@gmail.com");
 
-        if (user == null) {
+        if (optionalUser.isEmpty()) {
+            System.out.println("userwa hoyaganna bari una");
             return "cannot find user";
         }
+        User user = optionalUser.get();
+
         String banner= saveImage(companyProfileDTO.getBannerImage());
         String profile = saveImage(companyProfileDTO.getProfileImage());
         if (banner == null) {
+            System.out.println("image eka save une na");
             return "cannot save image banner";
         }
         if (profile == null) {
@@ -43,12 +49,12 @@ public class CompanyService {
 
 
         CompanyProfile company = companyProfileRepository.findByuser(user);
-
+        System.out.println();
         if (company != null) {
             company.setBannerImagePath(banner);
             company.setCompanyName(companyProfileDTO.getCompanyName());
             company.setIndustry(companyProfileDTO.getIndustry());
-//            company.setLocations(String.valueOf(companyProfileDTO.getLocations()));
+            company.setLocations(companyProfileDTO.getLocations());
             company.setMission(companyProfileDTO.getMission());
             company.setOverview(companyProfileDTO.getOverview());
             company.setProfileImagePath(profile);
@@ -57,25 +63,28 @@ public class CompanyService {
 
             try {
                 companyProfileRepository.save(company);
+
             } catch (RuntimeException e) {
                 return "can't update company profile";
             }
         }
         try {
-//            companyProfileRepository.save(new CompanyProfile(
-//                    banner,
-//                    companyProfileDTO.getCompanyName(),
-//                    companyProfileDTO.getIndustry(),
-////                    String.valueOf(companyProfileDTO.getLocations()),
-//                    companyProfileDTO.getMission(),
-//                    companyProfileDTO.getOverview(),
-//                    profile,
-//                    companyProfileDTO.getTagline(),
-//                    companyProfileDTO.getVision(),
-//                    user.getId()
-//
-//            ));
+
+            CompanyProfile companyProfile = new CompanyProfile();
+            companyProfile.setCompanyName(companyProfileDTO.getCompanyName());
+            companyProfile.setTagline(companyProfileDTO.getTagline());
+            companyProfile.setIndustry(companyProfileDTO.getIndustry());
+            companyProfile.setOverview(companyProfileDTO.getOverview());
+            companyProfile.setMission(companyProfileDTO.getMission());
+            companyProfile.setVision(companyProfileDTO.getVision());
+            companyProfile.setLocations(companyProfileDTO.getLocations());
+            companyProfile.setProfileImagePath(profile);
+            companyProfile.setBannerImagePath(banner);
+            companyProfile.setUser(user);
+
+            companyProfileRepository.save(companyProfile);
         } catch (RuntimeException e) {
+            System.out.println("save une na");
             return "can't save company profile";
         }
 
@@ -85,12 +94,16 @@ public class CompanyService {
     }
 
 
-    public String saveImage (String jsonImageString){
+    public String saveImage(String base64Data){
+        if(base64Data == null || base64Data.isEmpty()) return null;
 
-        String base64Image = jsonImageString.split(",")[1]; // Remove "data:image/png;base64,"
+        // Ensure format: data:image/png;base64,xxxx
+        String[] parts = base64Data.split(",");
+        String imageData = parts.length > 1 ? parts[1] : parts[0];
 
-        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-        String filename = "uploads/company_" + System.currentTimeMillis() ;
+        byte[] imageBytes = Base64.getDecoder().decode(imageData);
+        String extension = "png"; // optionally detect from base64 prefix
+        String filename = "uploads/company_" + System.currentTimeMillis() + "." + extension;
 
         File uploadDir = new File("uploads");
         if (!uploadDir.exists()) uploadDir.mkdirs();
@@ -100,8 +113,8 @@ public class CompanyService {
             System.out.println("Image saved to file system: " + filename);
             return filename;
         } catch (IOException e) {
-           return null;
+            e.printStackTrace();
+            return null;
         }
-
     }
 }
