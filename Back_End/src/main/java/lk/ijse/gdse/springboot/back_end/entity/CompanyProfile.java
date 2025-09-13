@@ -1,4 +1,5 @@
 package lk.ijse.gdse.springboot.back_end.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,6 +41,7 @@ public class CompanyProfile {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
+    @JsonBackReference
     private User user;
 
 

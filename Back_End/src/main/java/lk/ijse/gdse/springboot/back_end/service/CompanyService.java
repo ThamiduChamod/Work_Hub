@@ -6,13 +6,12 @@ import lk.ijse.gdse.springboot.back_end.entity.User;
 import lk.ijse.gdse.springboot.back_end.repository.CompanyProfileRepository;
 import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -117,4 +116,54 @@ public class CompanyService {
             return null;
         }
     }
+
+    public CompanyProfile getAll(String userName) {
+        Optional<User> userId = userRepository.findByUsername(userName);
+        if(userId.isEmpty()) return null;
+        User user = userId.get();
+        System.out.println("user: " + user.getId());
+        System.out.println("userNmae" + userName);
+
+        CompanyProfile companyProfile = companyProfileRepository.findByuser(user);
+        String profileImage = getBase64FromFile(companyProfile.getProfileImagePath());
+        if (profileImage == null) return null;
+        companyProfile.setProfileImagePath(profileImage);
+
+        String bannerImage = getBase64FromFile(companyProfile.getBannerImagePath());
+        if (bannerImage == null) return null;
+        companyProfile.setBannerImagePath(bannerImage);
+
+        return companyProfile;
+    }
+
+
+    public String getBase64FromFile(String filePath) {
+        try {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                System.out.println("File does not exist: " + filePath);
+                return null;
+            }
+
+            // Read file bytes
+            byte[] fileBytes = Files.readAllBytes(file.toPath());
+
+            // Encode to base64
+            String base64 = Base64.getEncoder().encodeToString(fileBytes);
+
+            // Optionally add data URI prefix (detect extension)
+            String extension = "";
+            int dotIndex = filePath.lastIndexOf('.');
+            if (dotIndex > 0) {
+                extension = filePath.substring(dotIndex + 1);
+            }
+
+            return "data:image/" + extension + ";base64," + base64;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

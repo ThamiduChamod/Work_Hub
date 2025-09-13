@@ -1,5 +1,6 @@
 package lk.ijse.gdse.springboot.back_end.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class User {
 
     // One-to-One mapping to CompanyProfile
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private CompanyProfile companyProfile;
 
 }
