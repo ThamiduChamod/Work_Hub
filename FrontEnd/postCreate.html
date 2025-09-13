@@ -119,7 +119,13 @@
 
                 <div class="form-group">
                     <label class="form-label">Job Post Image URL (Optional)</label>
-                    <input type="url" class="form-input" placeholder="https://example.com/image.jpg">
+                    <div>
+                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="previewAndUploadImage(event, 'avatar')">
+                        <button id="uploadProfilePhoto" type="button" class="upload-btn" onclick="document.getElementById('avatarUpload').click()">
+                            <i class="fas fa-upload"></i> Upload post Image
+                        </button>
+<!--                        <p style="color: #718096; font-size: 14px; margin-top: 8px;">Recommended: 300x300 pixels, JPG or PNG</p>-->
+                    </div>
                 </div>
             </div>
 

@@ -281,6 +281,24 @@ footer {
     padding: 20px 20px 0;
 }
 
+.upload-btn {
+    background: #2575fc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-btn:hover {
+    background: #1c68e3;
+}
+
 @media (max-width: 900px) {
     .form-row {
         flex-direction: column;
