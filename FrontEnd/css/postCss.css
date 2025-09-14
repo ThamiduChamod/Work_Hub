@@ -13,7 +13,7 @@ body {
     padding: 20px;
 }
 .container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 /* Header Styles */
@@ -24,6 +24,7 @@ header {
     border-radius: 10px;
     margin-bottom: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
 }
 
 .header-content {
@@ -87,6 +88,7 @@ header {
     margin: 0 auto;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
 }
 
 .post-card:hover {
@@ -152,20 +154,29 @@ header {
     padding: 20px;
 }
 
-.job-caption {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
 .caption-item {
-    display: flex;
-    align-items: center;
-    color: #4a5568;
-    font-size: 14px;
+    background:#f0f6ff;
+    color:#1f3a60;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+    transition:background .2s ease, transform .15s ease;
 }
 
+.caption-item i {
+    color:var(--accent);
+    font-size:14px;
+}
+
+.caption-item:hover {
+    background:#e1eeff;
+    transform:translateY(-2px);
+}
 .caption-item i {
     margin-right: 5px;
     color: #2575fc;

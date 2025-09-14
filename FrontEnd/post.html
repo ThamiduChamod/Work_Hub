@@ -19,16 +19,108 @@
     </header>
 
     <!-- Preview Section -->
-    <div class="preview-container">
-        <h2 class="preview-title">Job Post Preview</h2>
+<!--    <div class="preview-container">-->
+<!--&lt;!&ndash;        <h2 class="preview-title">Job Post Preview</h2>&ndash;&gt;-->
 
-        <div class="post-card">
+<!--        <div class="post-card">-->
+<!--            <div class="post-header">-->
+<!--                <div class="company-logo" id="previewLogo">TC</div>-->
+<!--                <div class="post-meta">-->
+<!--                    <h3 id="previewCompany">TechCorp International</h3>-->
+<!--                    <div class="post-date">-->
+<!--                        <i class="far fa-clock"></i> <span id="previewDate">Posted on September 9, 2025</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="post-menu">-->
+<!--                    <i class="fas fa-ellipsis-h"></i>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="post-content">-->
+<!--                <div class="job-caption">-->
+<!--                    <span class="caption-item"><i class="fas fa-map-marker-alt"></i> <span id="previewLocation">New York, USA</span></span>-->
+<!--                    <span class="caption-item"><i class="fas fa-briefcase"></i> <span id="previewExperience">5+ yrs Exp.</span></span>-->
+<!--                    <span class="caption-item"><i class="fas fa-dollar-sign"></i> <span id="previewSalary">$120k - $150k</span></span>-->
+<!--                    <span class="caption-item"><i class="fas fa-tools"></i> <span id="previewSkills">React, TypeScript</span></span>-->
+<!--                    <span class="caption-item"><i class="fas fa-clock"></i> <span id="previewJobType">Full-time</span></span>-->
+<!--                </div>-->
+
+<!--                <p class="post-text" id="previewText">-->
+<!--                    We just launched a new product to streamline workflow management across enterprises!-->
+<!--                </p>-->
+
+<!--                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Product Launch" class="post-image" id="previewImage">-->
+<!--            </div>-->
+
+<!--            <div class="post-actions">-->
+<!--                <div class="post-action">-->
+<!--                    <i class="far fa-comments"></i> Chat-->
+<!--                </div>-->
+<!--                <div class="post-action">-->
+<!--                    <i class="fas fa-map-marker-alt"></i> <span id="previewWorkMode">Remote</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+
+
+    <div class="preview-container" id="previewContainer"></div>
+
+
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+    });
+
+
+        // Sample jobs data
+    const jobs = [
+        {
+            logo: "TC",
+            company: "TechCorp International",
+            date: "Posted on September 9, 2025",
+            location: "New York, USA",
+            experience: "5+ yrs Exp.",
+            salary: "$120k - $150k",
+            skills: "React, TypeScript",
+            jobType: "Full-time",
+            text: "We just launched a new product to streamline workflow management across enterprises!",
+            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+            workMode: "Remote"
+        },
+        {
+            logo: "AI",
+            company: "AI Solutions Ltd",
+            date: "Posted on September 10, 2025",
+            location: "London, UK",
+            experience: "3+ yrs Exp.",
+            salary: "$90k - $110k",
+            skills: "Python, TensorFlow",
+            jobType: "Contract",
+            text: "We are looking for talented ML engineers to join our growing AI research team.",
+            image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1000&q=80",
+            workMode: "Hybrid"
+        }
+    ];
+
+    const container = document.getElementById("previewContainer");
+
+    jobs.forEach(job => {
+        const card = document.createElement("div");
+        card.classList.add("post-card");
+
+        card.innerHTML = `
             <div class="post-header">
-                <div class="company-logo" id="previewLogo">TC</div>
+                <div class="company-logo">${job.logo}</div>
                 <div class="post-meta">
-                    <h3 id="previewCompany">TechCorp International</h3>
+                    <h3>${job.company}</h3>
                     <div class="post-date">
-                        <i class="far fa-clock"></i> <span id="previewDate">Posted on September 9, 2025</span>
+                        <i class="far fa-clock"></i> <span>${job.date}</span>
                     </div>
                 </div>
                 <div class="post-menu">
@@ -38,18 +130,16 @@
 
             <div class="post-content">
                 <div class="job-caption">
-                    <span class="caption-item"><i class="fas fa-map-marker-alt"></i> <span id="previewLocation">New York, USA</span></span>
-                    <span class="caption-item"><i class="fas fa-briefcase"></i> <span id="previewExperience">5+ yrs Exp.</span></span>
-                    <span class="caption-item"><i class="fas fa-dollar-sign"></i> <span id="previewSalary">$120k - $150k</span></span>
-                    <span class="caption-item"><i class="fas fa-tools"></i> <span id="previewSkills">React, TypeScript</span></span>
-                    <span class="caption-item"><i class="fas fa-clock"></i> <span id="previewJobType">Full-time</span></span>
+                    <span class="caption-item"><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
+                    <span class="caption-item"><i class="fas fa-briefcase"></i> ${job.experience}</span>
+                    <span class="caption-item"><i class="fas fa-dollar-sign"></i> ${job.salary}</span>
+                    <span class="caption-item"><i class="fas fa-tools"></i> ${job.skills}</span>
+                    <span class="caption-item"><i class="fas fa-clock"></i> ${job.jobType}</span>
                 </div>
 
-                <p class="post-text" id="previewText">
-                    We just launched a new product to streamline workflow management across enterprises!
-                </p>
+                <p class="post-text">${job.text}</p>
 
-                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Product Launch" class="post-image" id="previewImage">
+                <img src="${job.image}" alt="Job Image" class="post-image">
             </div>
 
             <div class="post-actions">
@@ -57,12 +147,15 @@
                     <i class="far fa-comments"></i> Chat
                 </div>
                 <div class="post-action">
-                    <i class="fas fa-map-marker-alt"></i> <span id="previewWorkMode">Remote</span>
+                    <i class="fas fa-map-marker-alt"></i> ${job.workMode}
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+        `;
+
+        container.appendChild(card);
+    });
+</script>
+
 
 </body>
 </html>
