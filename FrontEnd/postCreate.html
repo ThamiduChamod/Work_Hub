@@ -88,7 +88,7 @@
                         <label class="form-label">Location</label>
                         <input id="address" type="text" class="form-input" placeholder="Address e.g. New York, USA" required>
                         <button type="button" class="openMap" onclick="openModal()">Select Locations on Map</button>
-                        <textarea hidden="hidden" readonly  id="jobLocations" class="form-input" placeholder="e.g. New York, USA" rows="1">Headquartered in San Francisco, with offices in New York, London, Tokyo, and Sydney. Our global presence allows us to serve clients around the world with localized support.</textarea>
+                        <textarea hidden="hidden" readonly  id="jobLocations" class="form-input" placeholder="e.g. New York, USA" rows="1"></textarea>
 
 
                     </div>
@@ -434,9 +434,10 @@
             selectedLocations.forEach((loc,i)=>{
                 text += (i+1)+". "+loc.name+" ("+loc.lat.toFixed(4)+", "+loc.lng.toFixed(4)+")\n";
             });
-            document.getElementById("companyLocations").value = text;
+            document.getElementById("jobLocations").value = text;
+            console.log(text);
         } else {
-            document.getElementById("companyLocations").value = "No locations selected!";
+            document.getElementById("jobLocations").value = "No locations selected!";
         }
         closeModal();
     });

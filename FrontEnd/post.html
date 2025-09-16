@@ -4,7 +4,39 @@
     <meta charset="UTF-8">
     <title>Posts</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
     <link rel="stylesheet" href="css/postCss.css">
+    <style>
+        /*h1 { text-align:center; color:#333; margin-bottom:20px; }*/
+        .form-section { margin-bottom:25px; }
+        /*.form-section h3 { color:#4CAF50; margin-bottom:10px; display:flex; align-items:center; gap:8px; }*/
+        .form-section textarea { width:100%; border-radius:8px; border:1px solid #ccc; padding:10px; font-size:14px; resize:none; }
+        .openMap { background:#4CAF50; color:#fff; border:none; padding:8px 16px; font-size:14px; border-radius:6px; cursor:pointer; transition:0.3s; }
+        .form-section button:hover { opacity:0.9; }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.6); animation: fadeInBg 0.3s ease; }
+        @keyframes fadeInBg { from{opacity:0;} to{opacity:1;} }
+        .modal-content { background:#fff; margin:5% auto; padding:15px; width:90%; max-width:1200px; max-height:100vh; overflow-y:auto; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: scaleIn 0.3s ease; position:relative; }
+        @keyframes scaleIn { from{transform:scale(0.95); opacity:0;} to{transform:scale(1); opacity:1;} }
+
+        .close { position:absolute; top:2px; right:20px; font-size:35px; font-weight:bold; cursor:pointer; color:#333; transition:0.3s; }
+        .close:hover { color:#f44336; }
+
+        #map { height: 65vh; width: 100%; border-radius:10px; border:1px solid #ccc; margin-bottom:15px; }
+
+        #controls { text-align:center; margin-top:10px; display:flex; justify-content:center; gap:12px; }
+        #controls button { padding:8px 16px; font-size:14px; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s; }
+        #setLocationBtn { background:#4CAF50; color:#fff; border:none; }
+        #setLocationBtn:hover { opacity:0.9; }
+        #clearBtn { background:#f44336; color:#fff; border:none; }
+        #clearBtn:hover { opacity:0.9; }
+
+        /* Popup marker custom style */
+        .leaflet-popup-content-wrapper { border-radius:8px; border:1px solid #4CAF50; }
+        .leaflet-popup-content { font-size:14px; line-height:1.4; }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -19,9 +51,19 @@
     </header>
 
     <div class="preview-container" id="previewContainer"></div>
-
-
 </div>
+<div id="locationModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Select Locations</h3>
+        <div id="map"></div>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 
 <script>
     let jobs = [];
@@ -123,32 +165,136 @@
                     <i class="far fa-comments"></i> Chat
                 </div>
                 <div class="post-action">
-                    <i class="fas fa-map-marker-alt"></i> ${job.workMode}
+                        <textarea  hidden readonly id="jobLocations-${job.id}"> ${job.location}</textarea>
+                        <button type="button" class="openMap" onclick="openModal(document.getElementById('jobLocations-${job.id}').value)" >
+                        <i class="fas fa-map-marker-alt" id="location"></i> see location
+                    </button>
+
                 </div>
             </div>
         `;
 
             container.appendChild(card);
 
-        // });
 
     }
     function formatDateTime(timestamp) {
         const date = new Date(timestamp);
-        return date.toLocaleString("en-US", {
+
+        return date.toLocaleString("en-GB", {
             year: "numeric",
-            month: "short",
+            month: "2-digit",
             day: "2-digit",
             hour: "2-digit",
-            minute: "2-digit"
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+            timeZone: "Asia/Colombo"  // 🔹 Force SL time zone
         });
     }
 
-    console.log(formatDateTime("2025-09-14T08:56:33.942"));
+    console.log(formatDateTime("2025-09-14T08:56:33.942+05:30"));
 
 
 </script>
 
+
+<script>
+
+    // Select all see location buttons
+    document.querySelectorAll(".openMapBtn").forEach(btn => {
+        btn.addEventListener("click", function() {
+            openModal();
+        });
+    });
+
+    // Open modal function
+    var map = L.map('map').setView([7.8731, 80.7718], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:'© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var markers = [];
+    var selectedLocations = [];
+    selectedLocations.push({
+        name: "Default Location",
+        lat: 7.8731,
+        lng: 80.7718
+    });
+
+    // Geocoder Search
+    // var geocoder = L.Control.geocoder({ defaultMarkGeocode: false })
+    //     .on('markgeocode', function(e) {
+    //         var center = e.geocode.center;
+    //         var name = e.geocode.name;
+    //         selectedLocations.push({name:name, lat:center.lat, lng:center.lng});
+    //         openModal();
+    //         map.setView(center, 12);
+    //     }).addTo(map);
+    //
+    // // Manual click select
+    // map.on('click', function(e){
+    //     selectedLocations.push({name:"Manual Selected", lat:e.latlng.lat, lng:e.latlng.lng});
+    //     openModal();
+    // });
+
+    // Modal open/close
+    function openModal(locationText) {
+        document.getElementById("locationModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+
+        setTimeout(()=> {
+            map.invalidateSize();
+
+            // Clear old markers
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+            selectedLocations = [];
+
+            if(locationText) {
+                // 🟢 Split by lines (1., 2., etc.)
+                let lines = locationText.split("\n");
+
+                lines.forEach(line => {
+                    // Find coordinates inside ()
+                    let match = line.match(/\(([-\d.]+),\s*([-\d.]+)\)/);
+                    if(match){
+                        let lat = parseFloat(match[1]);
+                        let lng = parseFloat(match[2]);
+
+                        // Name = line without coordinates
+                        let name = line.replace(/\(.*\)/, "").trim();
+
+                        selectedLocations.push({name, lat, lng});
+                    }
+                });
+            }
+
+            // Render all selected markers
+            selectedLocations.forEach(loc=>{
+                var marker = L.marker([loc.lat, loc.lng]).addTo(map)
+                    .bindPopup(loc.name + "<br>("+loc.lat.toFixed(4)+", "+loc.lng.toFixed(4)+")")
+                    .openPopup();
+                markers.push(marker);
+            });
+
+            // Fit map bounds to markers
+            if(markers.length>0){
+                var group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.2));
+            }
+
+        }, 300);
+    }
+
+
+    function closeModal() {
+        document.getElementById("locationModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+
+</script>
 
 </body>
 </html>
