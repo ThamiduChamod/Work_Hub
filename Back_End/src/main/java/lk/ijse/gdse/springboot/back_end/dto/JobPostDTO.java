@@ -1,22 +1,18 @@
-package lk.ijse.gdse.springboot.back_end.entity;
+package lk.ijse.gdse.springboot.back_end.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class JobPost {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class JobPostDTO {
     private Long id;
-
     private String jobTitle;
     private String address;
     private String location;
@@ -24,22 +20,10 @@ public class JobPost {
     private String salaryRange;
     private String jobType;
     private String workMode;
-
-    @Column(columnDefinition = "TEXT")
     private String skills;
-
-    @Column(columnDefinition = "TEXT")
     private String jobDescription;
-
     private String jobImagePath;
-
     private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(name = "userId") // foreign key
-    private User user;
-
-
-
-
+    // user ekata one nam username witharak yawanna
+    private int username;
 }
