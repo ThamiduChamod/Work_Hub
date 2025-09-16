@@ -41,7 +41,7 @@ public class SecurityConfig {
                                 auth.requestMatchers("/auth/**").permitAll()
                                         .requestMatchers("/company/**").hasAuthority("ROLE_COMPANY")  // ✅ එකත් වැඩ කරනවා, role check bypass වෙනවා
 
-                                        .requestMatchers("/user/**").hasAuthority("USER")
+                                        .requestMatchers("/user/**").hasAuthority("ROLE_USER")
                                         .anyRequest().authenticated())
                 .sessionManagement(
                         session->session
