@@ -1,7 +1,11 @@
 package lk.ijse.gdse.springboot.back_end.service;
 
+import lk.ijse.gdse.springboot.back_end.dto.CompanyProfileDTO;
 import lk.ijse.gdse.springboot.back_end.dto.JobPostDTO;
+import lk.ijse.gdse.springboot.back_end.dto.ProfilePhotoNameDTO;
+import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
 import lk.ijse.gdse.springboot.back_end.entity.JobPost;
+import lk.ijse.gdse.springboot.back_end.repository.CompanyProfileRepository;
 import lk.ijse.gdse.springboot.back_end.repository.JobPostRepository;
 import lk.ijse.gdse.springboot.back_end.util.ImagePath;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +15,7 @@ import org.springframework.stereotype.Service;
 
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +23,7 @@ import java.util.List;
 public class UserPostService {
 
     private final JobPostRepository jobPostRepository;
+    private final CompanyProfileRepository companyProfileRepository;
     private final ModelMapper modelMapper;
     private final ImagePath imagePath;
 
@@ -42,5 +45,19 @@ public class UserPostService {
 
 
         return jobPostDTOS;
+    }
+
+
+    public ProfilePhotoNameDTO getProfilePitcherAndName(int userId) {
+        System.out.println("run");
+        CompanyProfile companyProfile  = companyProfileRepository.findProfileImagePathAndCompanyNameByUserId(userId);
+
+        System.out.println(companyProfile);
+        return new ProfilePhotoNameDTO(
+                companyProfile.getCompanyName(),
+                imagePath.getBase64FromFile(companyProfile.getProfileImagePath())
+        );
+
+
     }
 }

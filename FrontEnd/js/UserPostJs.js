@@ -23,7 +23,7 @@ window.addEventListener("scroll", loadOnScroll); // function pass කරනව�
 
 let jobs = [];
     function getAllPost() {
-        const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token')
 
         fetch(`http://localhost:8080/user/allPost?page=${page}&size=${size}`, {
             method:'GET',
@@ -39,7 +39,8 @@ let jobs = [];
                     newJobs.forEach(job => {
                         if (!jobs.some(j => j.id === job.id)) { // check duplicate by ID
                             jobs.push(job);
-                            renderPosts([job]); // render one by one
+                            renderPosts([job]);
+                           // render one by one
                         }
                     });
                     page++;
@@ -72,24 +73,27 @@ let jobs = [];
 
     function renderPosts() {
     const container = document.getElementById("previewContainer");
-    container.innerHTML = ""; // clear before rendering
+
+        container.innerHTML = ""; // clear before rendering
 
     jobs.forEach(job => {
-    const card = document.createElement("div");
-    card.classList.add("post-card");
+        postHeader(job.username, job.id);
 
-    card.innerHTML = `
-                <div class="post-header">
-// <!--                    <div class="company-logo"></div>-->
-                    <div class="post-meta">
-<!--                        <h3>${job.companyName}</h3>-->
+    const card = document.createElement("div");
+        card.classList.add("post-card");
+
+        card.innerHTML = `
+                <div class="post-header" class="post-header feed-profile" style="cursor:pointer;">
+                     <img id="profileImg${job.id}" class="company-logo">
+                    <divc lass="name" class="post-meta">
+                        <h3 id="profileName${job.id}"></h3>
                         <div class="post-date">
                             <i class="far fa-clock"></i> Posted on ${formatDateTime(job.createdAt)}
                         </div>
                     </div>
-                    <div class="post-menu">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </div>
+<!--                    <div class="post-menu">-->
+<!--                        <i class="fas fa-ellipsis-h"></i>-->
+<!--                    </div>-->
                 </div>
 
                 <div class="post-content">
@@ -117,9 +121,42 @@ let jobs = [];
                 </div>
             `;
 
-    container.appendChild(card);
-});
-}
+            container.appendChild(card);
+        });
+    }
+
+    let image =""
+    let imgId = 0
+
+    function postHeader(userName,id) {
+        const token = localStorage.getItem('token')
+        console.log(userName)
+
+        fetch(`http://localhost:8080/user/postProfile?userId=${userName}`, {
+            method:'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(res => res.json())
+            .then(response => {
+
+                // HTML already rendered → safe to set
+                const imgEl = document.getElementById(`profileImg${id}`);
+                const nameEl = document.getElementById(`profileName${id}`);
+                if (nameEl) {
+                    nameEl.textContent = response.data.companyName; // text දාන්න
+                }
+
+                if (imgEl) {
+                    imgEl.setAttribute("src", response.data.profileImage);
+                } else {
+                    console.warn("Image element not found for id:", id);
+                }
+            })
+
+
+    }
 
     // run render
 
