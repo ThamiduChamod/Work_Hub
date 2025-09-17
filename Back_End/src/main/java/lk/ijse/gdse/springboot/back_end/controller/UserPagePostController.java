@@ -49,7 +49,18 @@ public class UserPagePostController {
                 profilePitcherAndName
         );
 
-     }
+    }
+
+
+    @GetMapping("/getAllProfile")
+    public APIResponse getAllProfile() {
+        return new APIResponse(
+                200,
+                "get all profiles",
+                userPostService.getAllProfilss()
+        );
+    }
+
 
 
 }

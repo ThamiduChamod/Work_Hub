@@ -2,6 +2,7 @@ package lk.ijse.gdse.springboot.back_end.service;
 
 import lk.ijse.gdse.springboot.back_end.dto.CompanyProfileDTO;
 import lk.ijse.gdse.springboot.back_end.dto.JobPostDTO;
+import lk.ijse.gdse.springboot.back_end.dto.ProfileCardDTO;
 import lk.ijse.gdse.springboot.back_end.dto.ProfilePhotoNameDTO;
 import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
 import lk.ijse.gdse.springboot.back_end.entity.JobPost;
@@ -59,5 +60,14 @@ public class UserPostService {
         );
 
 
+    }
+
+    public List<ProfileCardDTO> getAllProfilss() {
+        List<ProfileCardDTO> profileCard = companyProfileRepository.findProfileCard();
+
+        profileCard.forEach(profileCardDTO -> {
+            profileCardDTO.setProfileImagePath(imagePath.getBase64FromFile(profileCardDTO.getProfileImagePath()));
+        });
+        return profileCard;
     }
 }
