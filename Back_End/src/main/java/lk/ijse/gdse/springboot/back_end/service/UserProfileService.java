@@ -1,5 +1,6 @@
 package lk.ijse.gdse.springboot.back_end.service;
 
+import lk.ijse.gdse.springboot.back_end.dto.UserProfileAboutDTO;
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileDetailsDTO;
 import lk.ijse.gdse.springboot.back_end.entity.User;
 import lk.ijse.gdse.springboot.back_end.entity.UserProfile;
@@ -26,7 +27,7 @@ public class UserProfileService {
 
 
         UserProfile allByUser = userProfileRepository.findAllByUser(byUsername);
-        System.out.println(allByUser);
+
         if (allByUser == null) {
             try {
                 UserProfile map = new UserProfile();
@@ -56,4 +57,35 @@ public class UserProfileService {
         }
     }
 
+    public String updateOrSveUserProfileAbout(UserProfileAboutDTO dto) {
+        User byUsername = userRepository.findUserByUsername(dto.getUserName());
+        if (byUsername == null) return "Can't find user";
+
+
+        UserProfile allByUser = userProfileRepository.findAllByUser(byUsername);
+        System.out.println(allByUser);
+        if (allByUser == null) {
+            try {
+                UserProfile map = new UserProfile();
+                map.setAbout(dto.getAbout());
+                map.setEducation(dto.getEducation());
+                map.setContact(dto.getContact());
+                map.setUser(byUsername); // important: set the user relation
+                userProfileRepository.save(map);
+                return "User profile saved successfully";
+            }catch (Exception e) {
+                return "Can't Save user profile";
+            }
+        }
+        try {
+            allByUser.setAbout(dto.getAbout());
+            allByUser.setEducation(dto.getEducation());
+            allByUser.setContact(dto.getContact());
+            userProfileRepository.save(allByUser);
+
+            return "User profile updated successfully";
+        }catch (Exception e) {
+            return "Can't update user profile";
+        }
+    }
 }

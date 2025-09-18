@@ -1,6 +1,7 @@
 package lk.ijse.gdse.springboot.back_end.controller;
 
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
+import lk.ijse.gdse.springboot.back_end.dto.UserProfileAboutDTO;
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileDetailsDTO;
 import lk.ijse.gdse.springboot.back_end.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,16 @@ public class UserProfileController {
                 200,
                 "update Details",
                 userProfileService.updateOrSveUserProfile(userProfileDetailsDTO)
+        );
+
+    }
+
+    @PostMapping("/updateProfileAbout")
+    public APIResponse updateUserProfileAbout(@RequestBody UserProfileAboutDTO userProfileAboutDTO){
+        return new APIResponse(
+                200,
+                "update Details",
+                userProfileService.updateOrSveUserProfileAbout(userProfileAboutDTO)
         );
 
     }
