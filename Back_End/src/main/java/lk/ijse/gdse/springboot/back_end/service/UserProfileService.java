@@ -5,6 +5,7 @@ import lk.ijse.gdse.springboot.back_end.entity.User;
 import lk.ijse.gdse.springboot.back_end.entity.UserProfile;
 import lk.ijse.gdse.springboot.back_end.repository.UserProfileRepository;
 import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
+import lk.ijse.gdse.springboot.back_end.util.ImagePath;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class UserProfileService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final ModelMapper modelMapper;
+    private final ImagePath imagePath;
 
     public String updateOrSveUserProfile (UserProfileDetailsDTO userProfileDetailsDTO) {
        User byUsername = userRepository.findUserByUsername(userProfileDetailsDTO.getUserName());
@@ -29,10 +31,10 @@ public class UserProfileService {
             try {
                 UserProfile map = new UserProfile();
                 map.setProfileName(userProfileDetailsDTO.getProfileName());
-                map.setProfileImage(userProfileDetailsDTO.getProfileImage());
+                map.setProfileImage(imagePath.saveImage(userProfileDetailsDTO.getProfileImage()));
                 map.setAddress(userProfileDetailsDTO.getAddress());
                 map.setTitle(userProfileDetailsDTO.getTitle());
-                map.setBannerImage(userProfileDetailsDTO.getBannerImage());
+                map.setBannerImage(imagePath.saveImage(userProfileDetailsDTO.getBannerImage()));
                 map.setUser(byUsername); // important: set the user relation
                 userProfileRepository.save(map);
                 return "User profile saved successfully";
@@ -41,7 +43,11 @@ public class UserProfileService {
             }
         }
         try {
-            modelMapper.map(userProfileDetailsDTO, allByUser);
+            allByUser.setProfileName(userProfileDetailsDTO.getProfileName());
+            allByUser.setProfileImage(imagePath.saveImage(userProfileDetailsDTO.getProfileImage()));
+            allByUser.setAddress(userProfileDetailsDTO.getAddress());
+            allByUser.setTitle(userProfileDetailsDTO.getTitle());
+            allByUser.setBannerImage(imagePath.saveImage(userProfileDetailsDTO.getBannerImage()));
             userProfileRepository.save(allByUser);
 
             return "User profile updated successfully";
