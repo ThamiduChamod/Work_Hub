@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -36,4 +39,9 @@ public class UserProfile {
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     @JsonBackReference
     private User user;
+
+
+    // Relationship with follow table
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Followers> follows = new ArrayList<>();
 }

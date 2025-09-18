@@ -623,17 +623,17 @@
 
               </div>
 
-              <div class="experience-item editable" data-id="1">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div class="editable-field experience-title" contenteditable="false">Senior UI/UX Designer</div>
-                  <span class="badge bg-primary">Current</span>
-                </div>
-                <div class="editable-field experience-company" contenteditable="false">TechCorp</div>
-                <div class="editable-field experience-date" contenteditable="false">Jan 2022 - Present · 2 yrs 3 mos</div>
-                <div class="editable-field experience-description" contenteditable="false">
-                  Leading design projects for enterprise clients, creating design systems, and mentoring junior designers. Responsible for the end-to-end design process from research to implementation.
-                </div>
-              </div>
+<!--              <div class="experience-item editable" data-id="1">-->
+<!--                <div class="d-flex justify-content-between align-items-start">-->
+<!--                  <div class="editable-field experience-title" contenteditable="false">Senior UI/UX Designer</div>-->
+<!--                  <span class="badge bg-primary">Current</span>-->
+<!--                </div>-->
+<!--                <div class="editable-field experience-company" contenteditable="false">TechCorp</div>-->
+<!--                <div class="editable-field experience-date" contenteditable="false">Jan 2022 - Present · 2 yrs 3 mos</div>-->
+<!--                <div class="editable-field experience-description" contenteditable="false">-->
+<!--                  Leading design projects for enterprise clients, creating design systems, and mentoring junior designers. Responsible for the end-to-end design process from research to implementation.-->
+<!--                </div>-->
+<!--              </div>-->
 
 
             </div>
@@ -865,6 +865,100 @@ console.log(profileImageBase64);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <script>
+  document.addEventListener("DOMContentLoaded", () =>{
+
+    setProfile()
+
+  });
+
+  function setProfile() {
+
+    const token = localStorage.getItem('token')
+    fetch(`http://localhost:8080/user/getUserProfile`, {
+      method:'GET',
+      headers:{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+    }).then(res => res.json())
+            .then(response => {
+              const user =  response.data
+
+              $("#profileBanner").attr("src", user.bannerImage);
+              $("#profileImage").attr("src", user.profileImage);
+              $("#profileName").text( user.profileName);
+              $("#profileTagline").text(user.title);
+              $("#profileLocation").text(user.address);
+              $("#aboutText").text(user.about);
+              eduData(user.education)
+              setContact(user.contact)
+              setExperience(user.experience)
+
+
+            })
+
+  }
+function eduData(edu) {
+  // 1. Split by space + key:
+  const parts = edu.split(/ (?=\w+:)/);
+  // => ["name:BSc in Computer Science", "place:University of Colombo", "year:2015 - 2019"]
+
+  let result = {};
+  parts.forEach(part => {
+    const [key, ...value] = part.split(":");
+    result[key] = value.join(":").trim(); // handle ':' inside values
+  });
+
+  console.log(result);
+  $("#eduName").text(result.name);
+  $("#eduPlace").text(result.place);
+  $("#eduYear").text(result.year);
+
+}
+
+function setContact(con) {
+// 1. Split by space + key:
+  const parts = con.split(/ (?=\w+:)/);
+// ["email: thamidu@example.com", "phone: +94 77 123 4567", "portfolio: thamiduportfolio.com"]
+
+  let result = {};
+  parts.forEach(part => {
+    const [key, ...value] = part.split(":");
+    result[key] = value.join(":").trim();
+  });
+
+  console.log(result);
+  $("#conEmail").html(`<i class="fas fa-envelope me-2 text-primary"></i>` +result.email);
+  $("#conPhone").html(`<i class="fas fa-phone me-2 text-primary"></i>`+result.phone);
+  $("#conPort").html(`<i class="fas fa-link me-2 text-primary"></i> `+result.portfolio);
+}
+function setExperience(exp) {
+  const data = JSON.parse(exp);
+  console.log(data);
+    data.forEach(d  => {
+      console.log("dddddddddd"+d)
+
+
+      const newExp = document.createElement("div");
+      newExp.className = "experience-item editable new-item"; // mark new items
+      newExp.innerHTML = `
+    <div class="d-flex justify-content-between align-items-start">
+      <div class="editable-field experience-title" contenteditable="true">${d.title }</div>
+      <span class="badge bg-secondary">Current</span>
+    </div>
+    <div class="editable-field experience-company" contenteditable="true">${d.company}</div>
+    <div class="editable-field experience-date" contenteditable="true">${d.date}</div>
+    <div class="editable-field experience-description" contenteditable="true">${d.description}</div>
+  `;
+      document.getElementById("experience").appendChild(newExp);
+
+
+    })
+
+
+}
+
+
   // ✅ Activate Bootstrap tabs
   document.querySelectorAll('#profileTabs button').forEach(triggerEl => {
     new bootstrap.Tab(triggerEl)

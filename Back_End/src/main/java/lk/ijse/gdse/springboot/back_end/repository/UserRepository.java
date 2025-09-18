@@ -1,6 +1,5 @@
 package lk.ijse.gdse.springboot.back_end.repository;
 
-import lk.ijse.gdse.springboot.back_end.dto.UserDto;
 import lk.ijse.gdse.springboot.back_end.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,6 +9,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
     User findUserByUsername(String username);
+    User findAllById(long id);
 //    User findIdByUsername(String username);
 
 

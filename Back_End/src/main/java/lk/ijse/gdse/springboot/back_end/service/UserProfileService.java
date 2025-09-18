@@ -23,7 +23,10 @@ public class UserProfileService {
     private final ImagePath imagePath;
 
     public String updateOrSveUserProfile (UserProfileDetailsDTO userProfileDetailsDTO) {
-       User byUsername = userRepository.findUserByUsername(userProfileDetailsDTO.getUserName());
+        if (userProfileDetailsDTO == null) {
+            return "Invalid request";
+        }
+        User byUsername = userRepository.findUserByUsername(userProfileDetailsDTO.getUserName());
        if (byUsername == null) return "Can't find user";
 
 
@@ -45,14 +48,26 @@ public class UserProfileService {
             }
         }
         try {
+
+
+// Common fields (always update)
             allByUser.setProfileName(userProfileDetailsDTO.getProfileName());
-            allByUser.setProfileImage(imagePath.saveImage(userProfileDetailsDTO.getProfileImage()));
             allByUser.setAddress(userProfileDetailsDTO.getAddress());
             allByUser.setTitle(userProfileDetailsDTO.getTitle());
-            allByUser.setBannerImage(imagePath.saveImage(userProfileDetailsDTO.getBannerImage()));
-            userProfileRepository.save(allByUser);
 
+// Profile image (update only if not null/empty)
+            if (userProfileDetailsDTO.getProfileImage() != null && !userProfileDetailsDTO.getProfileImage().isEmpty()) {
+                allByUser.setProfileImage(imagePath.saveImage(userProfileDetailsDTO.getProfileImage()));
+            }
+
+// Banner image (update only if not null/empty)
+            if (userProfileDetailsDTO.getBannerImage() != null && !userProfileDetailsDTO.getBannerImage().isEmpty()) {
+                allByUser.setBannerImage(imagePath.saveImage(userProfileDetailsDTO.getBannerImage()));
+            }
+
+            userProfileRepository.save(allByUser);
             return "User profile updated successfully";
+
         }catch (Exception e) {
             return "Can't update user profile";
         }

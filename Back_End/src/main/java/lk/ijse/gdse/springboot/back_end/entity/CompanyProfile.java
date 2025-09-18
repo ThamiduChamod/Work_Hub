@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,6 +45,11 @@ public class CompanyProfile {
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     @JsonBackReference
     private User user;
+
+
+    // Relationship with follow table
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Followers> followers = new ArrayList<>();
 
 
 }
