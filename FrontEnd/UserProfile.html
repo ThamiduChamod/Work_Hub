@@ -586,17 +586,17 @@
                 <div class="col-md-6">
                   <h5 class="text-primary mb-3"><i class="fas fa-graduation-cap me-2"></i> Education</h5>
                   <div class="ps-3">
-                    <div class="editable-field mb-2" contenteditable="false">BSc in Computer Science</div>
-                    <div class="editable-field text-muted mb-2" contenteditable="false">University of Colombo</div>
-                    <div class="editable-field text-muted small" contenteditable="false">2015 - 2019</div>
+                    <div class="editable-field mb-2" id="eduName" contenteditable="false">BSc in Computer Science</div>
+                    <div class="editable-field text-muted mb-2" id="eduPlace" contenteditable="false">University of Colombo</div>
+                    <div class="editable-field text-muted small" id="eduYear" contenteditable="false">2015 - 2019</div>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <h5 class="text-primary mb-3"><i class="fas fa-address-card me-2"></i> Contact</h5>
                   <div class="ps-3">
-                    <div class="editable-field mb-2" contenteditable="false"><i class="fas fa-envelope me-2 text-primary"></i> thamidu@example.com</div>
-                    <div class="editable-field mb-2" contenteditable="false"><i class="fas fa-phone me-2 text-primary"></i> +94 77 123 4567</div>
-                    <div class="editable-field mb-0" contenteditable="false"><i class="fas fa-link me-2 text-primary"></i> thamiduportfolio.com</div>
+                    <div id="conEmail" class="editable-field mb-2" contenteditable="false"><i class="fas fa-envelope me-2 text-primary"></i> thamidu@example.com</div>
+                    <div id="conPhone" class="editable-field mb-2" contenteditable="false"><i class="fas fa-phone me-2 text-primary"></i> +94 77 123 4567</div>
+                    <div id="conPort" class="editable-field mb-0" contenteditable="false"><i class="fas fa-link me-2 text-primary"></i> thamiduportfolio.com</div>
                   </div>
                 </div>
               </div>
@@ -906,8 +906,43 @@ console.log(profileImageBase64);
   const aboutFields = "#about .editable-field";
   document.getElementById("editAboutBtn").addEventListener("click", () => enableFields(aboutFields));
   document.getElementById("saveAboutBtn").addEventListener("click", () => {
-    disableFields(aboutFields);
-    showToast("About section saved successfully!");
+    const token = localStorage.getItem('token')
+    const jwt = parseJwt(token)
+    fetch(`http://localhost:8080/user/updateProfileAbout`, {
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        "userName": jwt.sub,
+        "about":$("#aboutText").text(),
+        "education":"name:"+$("#eduName").text()+" place:"+$("#eduPlace").text()+" year:"+$("#eduYear").text(),
+        "contact":"email:"+$("#conEmail").text()+" phone:"+$("#conPhone").text()+" portfolio:"+$("#conPort").text(),
+      })
+    }).then(res => res.json())
+            .then(response => {
+              if(response.data === "saved successfully"){
+                disableFields(aboutFields);
+                showToast("About section saved successfully!");
+              }
+              if (response.data === "updated successfully"){
+                disableFields(aboutFields);
+                showToast("About section update successfully!");
+              }
+              if (response.data === "user"){
+                disableFields(aboutFields);
+                showToast("Can't find User!");
+              }
+              disableFields(aboutFields);
+              showToast("Can't save!");
+              console.log(response.data)
+            })
+
+
+
+
+
   });
   document.getElementById("cancelAboutBtn").addEventListener("click", () => disableFields(aboutFields));
 
