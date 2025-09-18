@@ -23,9 +23,13 @@ public class UserProfile {
     private String address;
     @Column(length = 2000)
     private String about;
+    @Column(length = 2000)
     private String education;
+    @Column(length = 2000)
     private String contact;
+    @Column(length = 2000)
     private String experience;
+    @Column(length = 2000)
     private String skills;
 
     @OneToOne

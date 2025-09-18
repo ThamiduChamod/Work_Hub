@@ -3,6 +3,7 @@ package lk.ijse.gdse.springboot.back_end.controller;
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileAboutDTO;
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileDetailsDTO;
+import lk.ijse.gdse.springboot.back_end.dto.UserProfileExperienceDTO;
 import lk.ijse.gdse.springboot.back_end.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,16 @@ public class UserProfileController {
                 200,
                 "update Details",
                 userProfileService.updateOrSveUserProfileAbout(userProfileAboutDTO)
+        );
+
+    }
+
+    @PostMapping("/updateProfileExperience")
+    public APIResponse updateUserProfileExperience(@RequestBody UserProfileExperienceDTO userProfileExperienceDTO){
+        return new APIResponse(
+                200,
+                "update Details",
+                userProfileService.updateOrSveUserProfileExperience(userProfileExperienceDTO)
         );
 
     }
