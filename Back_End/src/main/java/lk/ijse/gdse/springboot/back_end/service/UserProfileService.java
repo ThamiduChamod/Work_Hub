@@ -118,4 +118,19 @@ public class UserProfileService {
             return "Can't update ";
         }
     }
+
+
+    public UserProfile getProfile(String username) {
+        User user = userRepository.findUserByUsername(username);
+
+        UserProfile userProfile = userProfileRepository.findAllByUser(user);
+
+        userProfile.setProfileImage(imagePath.getBase64FromFile(userProfile.getProfileImage()));
+        userProfile.setBannerImage(imagePath.getBase64FromFile(userProfile.getBannerImage()));
+
+
+        return userProfile;
+
+
+    }
 }

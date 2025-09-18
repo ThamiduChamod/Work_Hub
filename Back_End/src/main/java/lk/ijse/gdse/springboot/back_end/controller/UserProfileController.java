@@ -6,6 +6,7 @@ import lk.ijse.gdse.springboot.back_end.dto.UserProfileDetailsDTO;
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileExperienceDTO;
 import lk.ijse.gdse.springboot.back_end.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,6 +42,16 @@ public class UserProfileController {
                 200,
                 "update Details",
                 userProfileService.updateOrSveUserProfileExperience(userProfileExperienceDTO)
+        );
+
+    }
+
+    @GetMapping("/getUserProfile")
+    public APIResponse getUserProfile(Authentication authentication){
+        return new APIResponse(
+                200,
+                "update Details",
+                userProfileService.getProfile(authentication.getName())
         );
 
     }
