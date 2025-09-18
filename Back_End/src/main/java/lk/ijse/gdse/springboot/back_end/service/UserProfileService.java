@@ -59,7 +59,7 @@ public class UserProfileService {
 
     public String updateOrSveUserProfileAbout(UserProfileAboutDTO dto) {
         User byUsername = userRepository.findUserByUsername(dto.getUserName());
-        if (byUsername == null) return "Can't find user";
+        if (byUsername == null) return "user";
 
 
         UserProfile allByUser = userProfileRepository.findAllByUser(byUsername);
@@ -72,9 +72,9 @@ public class UserProfileService {
                 map.setContact(dto.getContact());
                 map.setUser(byUsername); // important: set the user relation
                 userProfileRepository.save(map);
-                return "User profile saved successfully";
+                return "saved successfully";
             }catch (Exception e) {
-                return "Can't Save user profile";
+                return "Can't Save";
             }
         }
         try {
@@ -83,9 +83,9 @@ public class UserProfileService {
             allByUser.setContact(dto.getContact());
             userProfileRepository.save(allByUser);
 
-            return "User profile updated successfully";
+            return "updated successfully";
         }catch (Exception e) {
-            return "Can't update user profile";
+            return "Can't update ";
         }
     }
 }

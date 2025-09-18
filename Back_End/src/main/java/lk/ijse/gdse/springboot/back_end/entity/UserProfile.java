@@ -21,6 +21,7 @@ public class UserProfile {
     private String profileImage;
     private String title;
     private String address;
+    @Column(length = 2000)
     private String about;
     private String education;
     private String contact;

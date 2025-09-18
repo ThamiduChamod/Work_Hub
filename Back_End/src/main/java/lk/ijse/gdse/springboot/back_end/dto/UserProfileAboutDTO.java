@@ -13,7 +13,7 @@ public class UserProfileAboutDTO {
 
     private String userName;
     private String about;
-    private String Education;
+    private String education;
     private String contact;
 
 }
