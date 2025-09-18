@@ -635,23 +635,7 @@
                 </div>
               </div>
 
-              <div class="experience-item editable" data-id="2">
-                <div class="editable-field experience-title" contenteditable="false">UI Designer</div>
-                <div class="editable-field experience-company" contenteditable="false">DesignHub</div>
-                <div class="editable-field experience-date" contenteditable="false">Mar 2020 - Dec 2021 · 1 yr 10 mos</div>
-                <div class="editable-field experience-description" contenteditable="false">
-                  Designed user interfaces for mobile and web applications. Collaborated with developers to implement designs. Created wireframes, prototypes, and high-fidelity mockups.
-                </div>
-              </div>
 
-              <div class="experience-item editable" data-id="3">
-                <div class="editable-field experience-title" contenteditable="false">Junior Designer</div>
-                <div class="editable-field experience-company" contenteditable="false">Creative Solutions</div>
-                <div class="editable-field experience-date" contenteditable="false">Jun 2019 - Feb 2020 · 9 mos</div>
-                <div class="editable-field experience-description" contenteditable="false">
-                  Created visual designs for various clients. Assisted senior designers with research and prototyping. Developed skills in user-centered design principles.
-                </div>
-              </div>
             </div>
 
             <!-- Skills Tab -->
@@ -971,9 +955,44 @@ console.log(profileImageBase64);
   });
 
   document.getElementById("saveExperienceBtn").addEventListener("click", () => {
-    disableFields(expFields);
-    newExperienceItems = []; // clear tracking since saved
-    showToast("Experience saved successfully!");
+    const allExperienceData = getExperienceData();
+    console.log(allExperienceData);
+    const token = localStorage.getItem('token')
+    const jwt = parseJwt(token)
+    const experienceString = JSON.stringify(allExperienceData);
+    fetch(`http://localhost:8080/user/updateProfileExperience`, {
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        "userName": jwt.sub,
+        "experience": experienceString
+      })
+    }).then(res => res.json())
+            .then(response => {
+              if(response.data === "saved successfully"){
+                disableFields(expFields);
+                newExperienceItems = []; // clear tracking since saved
+                showToast("Experience section saved successfully!");
+              }
+              if (response.data === "updated successfully"){
+                disableFields(expFields);
+                newExperienceItems = []; // clear tracking since saved
+                showToast("Experience section update successfully!");
+              }
+              if (response.data === "user"){
+                disableFields(expFields);
+                newExperienceItems = []; // clear tracking since saved
+                showToast("Can't find User!");
+              }
+              disableFields(expFields);
+              newExperienceItems = []; // clear tracking since saved
+              showToast("Can't save!");
+              console.log(response.data)
+            })
+
   });
 
   document.getElementById("cancelExperienceBtn").addEventListener("click", () => {
@@ -982,6 +1001,30 @@ console.log(profileImageBase64);
     newExperienceItems.forEach(item => item.remove());
     newExperienceItems = [];
   });
+
+
+  function getExperienceData() {
+    const experienceItems = document.querySelectorAll(".experience-item");
+    let experiences = [];
+
+    experienceItems.forEach(item => {
+      const title = item.querySelector(".experience-title")?.innerText.trim() || "";
+      const company = item.querySelector(".experience-company")?.innerText.trim() || "";
+      const date = item.querySelector(".experience-date")?.innerText.trim() || "";
+      const description = item.querySelector(".experience-description")?.innerText.trim() || "";
+
+      experiences.push({
+        title,
+        company,
+        date,
+        description
+      });
+    });
+
+    return experiences;
+  }
+
+
 
 
   // -----------------------------
