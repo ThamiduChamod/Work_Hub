@@ -1023,8 +1023,21 @@ function setFollowingList() {
       // Add event listener for unfollow
       card.querySelector(".unfollow-btn").addEventListener("click", (e) => {
         const companyId = e.currentTarget.getAttribute("data-id");
-        console.log("Unfollow clicked for company ID:", companyId);
+        console.log("Unfollow clicked for company ID:", company.id);
 
+
+        const token = localStorage.getItem('token')
+        fetch(`http://localhost:8080/user/unfollow?id=${company.id}`, {
+          method:'DELETE',
+          headers:{
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        }).then(res => res.json())
+                .then(response => {
+                  console.log(response.data)
+
+                })
 
         // Call backend API to unfollow here
         // After success, remove card from DOM
@@ -1046,18 +1059,15 @@ function setFollowingList() {
   });
 
   // ✅ Unfollow button functionality
-  document.querySelectorAll('.unfollow-btn').forEach(button => {
-    button.addEventListener('click', function (e) {
-      e.stopPropagation();
-      const companyElement = this.closest('.followed-company');
-      const companyName = companyElement.querySelector('h6').textContent;
-
-      if (confirm(`Are you sure you want to unfollow ${companyName}?`)) {
-        companyElement.style.opacity = '0';
-        setTimeout(() => companyElement.remove(), 300);
-      }
-    });
-  });
+  // document.querySelectorAll('.unfollow-btn').forEach(button => {
+  //   button.addEventListener('click', function (e) {
+  //     e.stopPropagation();
+  //     const companyElement = this.closest('.followed-company');
+  //     const companyName = companyElement.querySelector('h6').textContent;
+  //
+  //
+  //   });
+  // });
 
   // -----------------------------
   // ✅ ABOUT TAB

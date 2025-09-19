@@ -68,4 +68,13 @@ public class UserProfileController {
         );
     }
 
+    @DeleteMapping("/unfollow")
+    public APIResponse unFollow(@RequestParam long id){
+        return new APIResponse(
+          200,
+          "unFollow",
+          userProfileService.unfollow(id)
+        );
+    }
+
 }

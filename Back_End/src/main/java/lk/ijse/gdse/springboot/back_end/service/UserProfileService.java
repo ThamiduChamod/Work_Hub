@@ -6,6 +6,7 @@ import lk.ijse.gdse.springboot.back_end.dto.UserProfileDetailsDTO;
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileExperienceDTO;
 import lk.ijse.gdse.springboot.back_end.entity.User;
 import lk.ijse.gdse.springboot.back_end.entity.UserProfile;
+import lk.ijse.gdse.springboot.back_end.repository.FollowRepository;
 import lk.ijse.gdse.springboot.back_end.repository.UserProfileRepository;
 import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
 import lk.ijse.gdse.springboot.back_end.util.ImagePath;
@@ -22,6 +23,7 @@ public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
     private final ModelMapper modelMapper;
     private final ImagePath imagePath;
+    private final FollowRepository followRepository;
 
     public String updateOrSveUserProfile (UserProfileDetailsDTO userProfileDetailsDTO) {
         if (userProfileDetailsDTO == null) {
@@ -145,6 +147,15 @@ public class UserProfileService {
         userProfile.setBannerImage(imagePath.getBase64FromFile(userProfile.getBannerImage()));
 
         return modelMapper.map(userProfile, UserProfileDTO.class);
+
+    }
+    public boolean unfollow(long id){
+        try {
+            followRepository.deleteById( id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
 
     }
 }
