@@ -1,6 +1,7 @@
 package lk.ijse.gdse.springboot.back_end.service;
 
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileAboutDTO;
+import lk.ijse.gdse.springboot.back_end.dto.UserProfileDTO;
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileDetailsDTO;
 import lk.ijse.gdse.springboot.back_end.dto.UserProfileExperienceDTO;
 import lk.ijse.gdse.springboot.back_end.entity.User;
@@ -135,7 +136,7 @@ public class UserProfileService {
     }
 
 
-    public UserProfile getProfile(String username) {
+    public UserProfileDTO getProfile(String username) {
         User user = userRepository.findUserByUsername(username);
 
         UserProfile userProfile = userProfileRepository.findAllByUser(user);
@@ -143,9 +144,7 @@ public class UserProfileService {
         userProfile.setProfileImage(imagePath.getBase64FromFile(userProfile.getProfileImage()));
         userProfile.setBannerImage(imagePath.getBase64FromFile(userProfile.getBannerImage()));
 
-
-        return userProfile;
-
+        return modelMapper.map(userProfile, UserProfileDTO.class);
 
     }
 }

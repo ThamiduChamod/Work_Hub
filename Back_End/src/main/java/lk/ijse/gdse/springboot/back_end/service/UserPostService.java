@@ -98,5 +98,32 @@ public class UserPostService {
         return profileCardDTOS;
     }
 
+    public List<ProfileCardDTO> getFollowedCompanies(String userName) {
+        // 1. Get User
+        User user = userRepository.findUserByUsername(userName);
+        if (user == null) return Collections.emptyList();
+
+        // 2. Get UserProfile
+        UserProfile userProfile = userProfileRepository.findAllByUser(user);
+        if (userProfile == null) return Collections.emptyList();
+
+        // 3. Get list of Followers (i.e., followed companies)
+        List<Followers> followedList = followRepository.findAllByUser(userProfile);
+        if (followedList.isEmpty()) return Collections.emptyList();
+
+        // 4. Map to ProfileCardDTO
+        List<ProfileCardDTO> profileCardDTOS = new ArrayList<>();
+        for (Followers follower : followedList) {
+            CompanyProfile company = follower.getCompany();
+            ProfileCardDTO dto = new ProfileCardDTO();
+
+            dto.setId(follower.getId());
+            dto.setCompanyName(company.getCompanyName());
+            dto.setProfileImagePath(imagePath.getBase64FromFile(company.getProfileImagePath()));
+            profileCardDTOS.add(dto);
+        }
+
+        return profileCardDTOS;
+    }
 
 }
