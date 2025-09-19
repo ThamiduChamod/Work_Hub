@@ -56,7 +56,7 @@ public class UserPagePostController {
     }
 
 
-    @GetMapping("/getAllProfil")
+    @GetMapping("/getAllProfile")
     public APIResponse getAllProfile(Authentication authentication) {
         return new APIResponse(
                 200,
