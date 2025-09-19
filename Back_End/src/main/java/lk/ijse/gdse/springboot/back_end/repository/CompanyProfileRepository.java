@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface CompanyProfileRepository extends JpaRepository<CompanyProfile, Long> {
 
-   CompanyProfile findByuser(User user);
+   CompanyProfile findCompanyProfileByUser(User user);
 
    @Query("SELECT c FROM CompanyProfile c WHERE c.user.id = :id")
    CompanyProfile findProfileImagePathAndCompanyNameByUserId(int id);

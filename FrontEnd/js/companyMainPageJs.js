@@ -9,8 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }).then(res => res.json())
         .then(response => {
             const profile = response.data; // data object එක
-            console.log(profile.companyName); // TechCorp International
-            // console.log(profile.bannerImagePath);     // Technology & Software Development
+            // console.log(profile.companyName); // TechCorp International
             console.log(profile);    // Software Development
             setData(profile);
         });
@@ -20,11 +19,11 @@ function setData(profile) {
     // Suppose profile object එක server එකෙන් එනවා
 // profile.bannerImageBase64 contains base64 string from getBase64FromFile()
 
-    $("#bannerImage").attr("src", profile.bannerImagePath);
+    $("#bannerImage").attr("src", profile.bannerImage);
 
     // Assume profile.profileImageBase64 contains the base64 image string
     $(".profile-avatar").css({
-        "background-image": `url(${profile.profileImagePath})`,
+        "background-image": `url(${profile.profileImage})`,
         "background-size": "cover",       // div එකට fit වෙනවා
         "background-position": "center",  // image center align
         "color": "transparent"            // "TC" letters hide කරන්න

@@ -5,6 +5,7 @@ import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
 import lk.ijse.gdse.springboot.back_end.entity.User;
 import lk.ijse.gdse.springboot.back_end.repository.CompanyProfileRepository;
 import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
+import lk.ijse.gdse.springboot.back_end.util.ImagePath;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,146 +25,101 @@ public class CompanyService {
 
     private final CompanyProfileRepository companyProfileRepository;
     private final UserRepository userRepository;
+    private final ImagePath imagePath;
 
     public String saveOrUpdate(CompanyProfileDTO companyProfileDTO) {
 //        System.out.println("companyProfileDTO: " + companyProfileDTO);
+        System.out.println("companyProfileDTO: " + companyProfileDTO);
         System.out.println(companyProfileDTO.getMali());
-        Optional <User> optionalUser = userRepository.findByUsername(companyProfileDTO.getMali());
 
-        if (optionalUser.isEmpty()) {
+        User optionalUser = userRepository.findUserByUsername(companyProfileDTO.getMali());
+
+        if (optionalUser == null) {
             System.out.println("userwa hoyaganna bari una");
             return "cannot find user";
         }
-        User user = optionalUser.get();
 
-        String banner= saveImage(companyProfileDTO.getBannerImage());
-        String profile = saveImage(companyProfileDTO.getProfileImage());
+
+        String banner = imagePath.saveImage(companyProfileDTO.getBannerImage());
+        String profile = imagePath.saveImage(companyProfileDTO.getProfileImage());
+
         if (banner == null) {
-            System.out.println("image eka save une na");
-            return "cannot save image banner";
+            System.out.println("image eka save une na (banner)");
+            return "cannot save banner image";
         }
         if (profile == null) {
-            return "cannot save image banner";
+            System.out.println("image eka save une na (profile)");
+            return "cannot save profile image";
         }
 
-
-        CompanyProfile company = companyProfileRepository.findByuser(user);
-        System.out.println();
-        if (company != null) {
-            company.setBannerImagePath(banner);
-            company.setCompanyName(companyProfileDTO.getCompanyName());
-            company.setIndustry(companyProfileDTO.getIndustry());
-            company.setLocations(companyProfileDTO.getLocations());
-            company.setMission(companyProfileDTO.getMission());
-            company.setOverview(companyProfileDTO.getOverview());
-            company.setProfileImagePath(profile);
-            company.setTagline(companyProfileDTO.getTagline());
-            company.setVision(companyProfileDTO.getVision());
-
-            try {
-                companyProfileRepository.save(company);
-
-            } catch (RuntimeException e) {
-                return "can't update company profile";
-            }
-        }
         try {
+            CompanyProfile company = companyProfileRepository.findCompanyProfileByUser(optionalUser);
 
-            CompanyProfile companyProfile = new CompanyProfile();
-            companyProfile.setCompanyName(companyProfileDTO.getCompanyName());
-            companyProfile.setTagline(companyProfileDTO.getTagline());
-            companyProfile.setIndustry(companyProfileDTO.getIndustry());
-            companyProfile.setOverview(companyProfileDTO.getOverview());
-            companyProfile.setMission(companyProfileDTO.getMission());
-            companyProfile.setVision(companyProfileDTO.getVision());
-            companyProfile.setLocations(companyProfileDTO.getLocations());
-            companyProfile.setProfileImagePath(profile);
-            companyProfile.setBannerImagePath(banner);
-            companyProfile.setUser(user);
+            if (company != null) {
+                // -------- Update case --------
+                company.setBannerImagePath(banner);
+                company.setCompanyName(companyProfileDTO.getCompanyName());
+                company.setIndustry(companyProfileDTO.getIndustry());
+                company.setLocations(companyProfileDTO.getLocations());
+                company.setMission(companyProfileDTO.getMission());
+                company.setOverview(companyProfileDTO.getOverview());
+                company.setProfileImagePath(profile);
+                company.setTagline(companyProfileDTO.getTagline());
+                company.setVision(companyProfileDTO.getVision());
 
-            companyProfileRepository.save(companyProfile);
+                companyProfileRepository.save(company);
+                return "company profile updated successfully";
+            } else {
+                // -------- Insert case --------
+                CompanyProfile newCompany = new CompanyProfile();
+                newCompany.setCompanyName(companyProfileDTO.getCompanyName());
+                newCompany.setTagline(companyProfileDTO.getTagline());
+                newCompany.setIndustry(companyProfileDTO.getIndustry());
+                newCompany.setOverview(companyProfileDTO.getOverview());
+                newCompany.setMission(companyProfileDTO.getMission());
+                newCompany.setVision(companyProfileDTO.getVision());
+                newCompany.setLocations(companyProfileDTO.getLocations());
+                newCompany.setProfileImagePath(profile);
+                newCompany.setBannerImagePath(banner);
+                newCompany.setUser(optionalUser);
+
+                companyProfileRepository.save(newCompany);
+                return "company profile created successfully";
+            }
+
         } catch (RuntimeException e) {
-            System.out.println("save une na");
-            return "can't save company profile";
-        }
-
-
-    return "can't find user Id";
-
-    }
-
-
-    public String saveImage(String base64Data){
-        if(base64Data == null || base64Data.isEmpty()) return null;
-
-        // Ensure format: data:image/png;base64,xxxx
-        String[] parts = base64Data.split(",");
-        String imageData = parts.length > 1 ? parts[1] : parts[0];
-
-        byte[] imageBytes = Base64.getDecoder().decode(imageData);
-        String extension = "png"; // optionally detect from base64 prefix
-        String filename = "uploads/company_" + System.currentTimeMillis() + "." + extension;
-
-        File uploadDir = new File("uploads");
-        if (!uploadDir.exists()) uploadDir.mkdirs();
-
-        try (FileOutputStream fos = new FileOutputStream(filename)) {
-            fos.write(imageBytes);
-            System.out.println("Image saved to file system: " + filename);
-            return filename;
-        } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return "error while saving/updating company profile";
         }
     }
 
-    public CompanyProfile getAll(String userName) {
-        Optional<User> userId = userRepository.findByUsername(userName);
-        if(userId.isEmpty()) return null;
-        User user = userId.get();
-        System.out.println("user: " + user.getId());
+
+
+    public CompanyProfileDTO getAll(String userName) {
+        User userId = userRepository.findUserByUsername(userName);
+
+
+        if(userId == null) return null;
+        System.out.println("user: " + userId.getId());
         System.out.println("userNmae" + userName);
 
-        CompanyProfile companyProfile = companyProfileRepository.findByuser(user);
-        String profileImage = getBase64FromFile(companyProfile.getProfileImagePath());
-        if (profileImage == null) return null;
-        companyProfile.setProfileImagePath(profileImage);
+        CompanyProfile companyProfile = companyProfileRepository.findCompanyProfileByUser(userId);
 
-        String bannerImage = getBase64FromFile(companyProfile.getBannerImagePath());
-        if (bannerImage == null) return null;
-        companyProfile.setBannerImagePath(bannerImage);
+        System.out.println(companyProfile.getId());
 
-        return companyProfile;
-    }
+        return new CompanyProfileDTO(
+                imagePath.getBase64FromFile(companyProfile.getProfileImagePath()),
+                companyProfile.getCompanyName(),
+                imagePath.getBase64FromFile(companyProfile.getBannerImagePath()),
+                companyProfile.getTagline(),
+                companyProfile.getIndustry(),
+                companyProfile.getOverview(),
+                companyProfile.getMission(),
+                companyProfile.getVision(),
+                companyProfile.getLocations(),
+                companyProfile.getId().toString()
+        );
 
-
-    public String getBase64FromFile(String filePath) {
-        try {
-            File file = new File(filePath);
-            if (!file.exists()) {
-                System.out.println("File does not exist: " + filePath);
-                return null;
-            }
-
-            // Read file bytes
-            byte[] fileBytes = Files.readAllBytes(file.toPath());
-
-            // Encode to base64
-            String base64 = Base64.getEncoder().encodeToString(fileBytes);
-
-            // Optionally add data URI prefix (detect extension)
-            String extension = "";
-            int dotIndex = filePath.lastIndexOf('.');
-            if (dotIndex > 0) {
-                extension = filePath.substring(dotIndex + 1);
-            }
-
-            return "data:image/" + extension + ";base64," + base64;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
 }

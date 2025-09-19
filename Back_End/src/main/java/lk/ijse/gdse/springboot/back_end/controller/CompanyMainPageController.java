@@ -2,6 +2,7 @@ package lk.ijse.gdse.springboot.back_end.controller;
 
 
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
+import lk.ijse.gdse.springboot.back_end.dto.CompanyProfileDTO;
 import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
 import lk.ijse.gdse.springboot.back_end.service.CompanyService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class CompanyMainPageController {
 
     @GetMapping("getProfile")
     public APIResponse getProfile(Authentication authentication) {
-        CompanyProfile all = companyService.getAll(authentication.getName());
-        System.out.println(all.getBannerImagePath());
+        System.out.println(authentication.getName());
+        CompanyProfileDTO all = companyService.getAll(authentication.getName());
         return new APIResponse(
                 200,
                 "get all details",

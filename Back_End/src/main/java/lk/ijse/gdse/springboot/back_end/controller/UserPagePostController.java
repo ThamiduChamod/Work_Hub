@@ -41,8 +41,10 @@ public class UserPagePostController {
                 posts
         );
     }
-     @GetMapping("/postProfile")
+
+    @GetMapping("/postProfile")
     public APIResponse postProfile( @RequestParam int userId) {
+        System.out.println(userId);
          ProfilePhotoNameDTO profilePitcherAndName = userPostService.getProfilePitcherAndName(userId);
 
         return new APIResponse(
@@ -54,7 +56,7 @@ public class UserPagePostController {
     }
 
 
-    @GetMapping("/getAllProfile")
+    @GetMapping("/getAllProfil")
     public APIResponse getAllProfile(Authentication authentication) {
         return new APIResponse(
                 200,
