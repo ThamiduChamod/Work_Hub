@@ -87,4 +87,13 @@ public class UserProfileController {
                 );
     }
 
+    @GetMapping("/userProfilePhoto")
+    private APIResponse getProfilePhoto(Authentication authentication){
+        return new APIResponse(
+                200,
+                "get Profile Photo",
+                userProfileService.getProfilePhoto(authentication.getName())
+        );
+    }
+
 }

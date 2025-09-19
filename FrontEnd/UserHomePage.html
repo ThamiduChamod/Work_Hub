@@ -381,7 +381,7 @@
         <!-- Profile Dropdown -->
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-decoration-none" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://i.pravatar.cc/40?img=12" alt="Profile" class="rounded-circle" width="40" height="40">
+                <img id="userProfilePhoto" alt="Profile" class="rounded-circle" width="40" height="40">
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                 <li><a class="dropdown-item" href="UserProfile.html">My Profile</a></li>
@@ -558,14 +558,16 @@
 
     document.addEventListener("DOMContentLoaded",() =>{
         console.log("aaa")
-        getOldNotification()
+        getProfilePhoto();
+        getOldNotification();
+
 
     });
 
     function getProfilePhoto() {
         const token = localStorage.getItem("token");
 
-        fetch('http://localhost:8080/user/notifications', {
+        fetch('http://localhost:8080/user/userProfilePhoto', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -575,11 +577,8 @@
             .then(res => res.json())
             .then(response => {
                 console.log(response.data)
-                response.data.forEach(d =>{
-                    addNotification(d.companyName, d.imag, d.message)
-                })
 
-
+                $("#userProfilePhoto").attr("src", response.data);
 
             })
     }

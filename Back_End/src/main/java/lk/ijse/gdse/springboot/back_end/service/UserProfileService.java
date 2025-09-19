@@ -175,4 +175,13 @@ public class UserProfileService {
                 })
                 .toList();
     }
+
+    public String getProfilePhoto(String name) {
+        User user = userRepository.findUserByUsername(name);
+        if (user == null) return null;
+        UserProfile allByUser = userProfileRepository.findAllByUser(user);
+        if (allByUser == null) return null;
+        return imagePath.getBase64FromFile(allByUser.getProfileImage());
+
+    }
 }
