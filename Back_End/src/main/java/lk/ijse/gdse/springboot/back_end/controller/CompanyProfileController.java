@@ -18,10 +18,8 @@ public class CompanyProfileController {
     @PostMapping("/update")
     public APIResponse updateCompanyProfile(@RequestBody CompanyProfileDTO companyProfileDTO) {
 
-        System.out.println(companyProfileDTO.getCompanyName());
+
         System.out.println(companyProfileDTO.getMali());
-        System.out.println(companyProfileDTO.getLocations());
-        System.out.println(companyProfileDTO.getMission());
         System.out.println("wadaaaaaaa");
         return new APIResponse(
                 200,

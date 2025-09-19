@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function renderCompanyCard(company) {
-    console.log("ggggggg"+company);
+    console.log("ggggggg"+company.id);
+
 
     const container = document.getElementById("companyContainer"); // card එක append වෙන්න තියෙන div
 
@@ -49,10 +50,45 @@ function renderCompanyCard(company) {
             ${company.companyName}
         </div>
         <small class="text-muted mb-2">${company.followersCount}</small>
-        <button  class="btn btn-sm w-100 rounded-pill followBtn" data-id="${company.id}">
+        <button  class="btn btn-sm w-100 rounded-pill followBtn"  id="${company.id}">
             Follow
         </button>
     `;
 
     container.appendChild(card);
+
+
+    $(`#${company.id}`).on('click', function () {
+        console.log("click", company.companyName);
+        const token = localStorage.getItem('token')
+        const user = parseJwt(token);
+        console.log(user)
+
+        fetch("http://localhost:8080/user/addFollowers",{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },body:JSON.stringify({
+                "company_id": company.id,
+                "userName": user.sub
+            })
+        }).then(res => res.json())
+            .then(response => {
+                console.log(response.data)
+
+
+            })
+    });
+
+
 }
+function parseJwt(token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+}
+

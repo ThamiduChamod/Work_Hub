@@ -48,9 +48,10 @@ const token = localStorage.getItem("token");
 $("#saveBtn").on("click", async function () {
 
     console.log(parseJwt(localStorage.getItem("token")));
-    const email = 'thamiduchamode100@gmail.com'
+
     const token = localStorage.getItem("token");
-    console.log(token)
+    const email = parseJwt(token)
+        console.log(token)
     // const actualToken = token.startsWith('Bearer ') ? token.substring(7) : token;
 
 
@@ -72,7 +73,7 @@ $("#saveBtn").on("click", async function () {
               locations: companyLocations.val(),
         //       profileImage: profileImageBase64,
         //       bannerImage: bannerImageBase64,
-              mali: email
+              mali: email.sub
             })
     })
         .then(response => {

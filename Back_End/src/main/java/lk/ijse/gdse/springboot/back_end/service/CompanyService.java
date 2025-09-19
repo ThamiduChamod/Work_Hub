@@ -26,9 +26,9 @@ public class CompanyService {
     private final UserRepository userRepository;
 
     public String saveOrUpdate(CompanyProfileDTO companyProfileDTO) {
-        System.out.println("companyProfileDTO: " + companyProfileDTO);
-        System.out.println(companyProfileDTO);
-        Optional <User> optionalUser = userRepository.findByUsername("thamiduchamod100@gmail.com");
+//        System.out.println("companyProfileDTO: " + companyProfileDTO);
+        System.out.println(companyProfileDTO.getMali());
+        Optional <User> optionalUser = userRepository.findByUsername(companyProfileDTO.getMali());
 
         if (optionalUser.isEmpty()) {
             System.out.println("userwa hoyaganna bari una");
