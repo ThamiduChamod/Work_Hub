@@ -1,13 +1,16 @@
 package lk.ijse.gdse.springboot.back_end.service;
 
-import lk.ijse.gdse.springboot.back_end.dto.CompanyProfileDTO;
 import lk.ijse.gdse.springboot.back_end.dto.JobPostDTO;
 import lk.ijse.gdse.springboot.back_end.dto.ProfileCardDTO;
 import lk.ijse.gdse.springboot.back_end.dto.ProfilePhotoNameDTO;
 import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
+import lk.ijse.gdse.springboot.back_end.entity.Followers;
 import lk.ijse.gdse.springboot.back_end.entity.JobPost;
+import lk.ijse.gdse.springboot.back_end.entity.User;
 import lk.ijse.gdse.springboot.back_end.repository.CompanyProfileRepository;
+import lk.ijse.gdse.springboot.back_end.repository.FollowRepository;
 import lk.ijse.gdse.springboot.back_end.repository.JobPostRepository;
+import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
 import lk.ijse.gdse.springboot.back_end.util.ImagePath;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,8 @@ public class UserPostService {
     private final CompanyProfileRepository companyProfileRepository;
     private final ModelMapper modelMapper;
     private final ImagePath imagePath;
+    private final FollowRepository followRepository;
+    private final UserRepository userRepository;
 
     public List<JobPostDTO> getAllPost(Pageable pageable) {
         Page<JobPost> all = jobPostRepository.findAll(pageable);
@@ -62,12 +69,21 @@ public class UserPostService {
 
     }
 
-    public List<ProfileCardDTO> getAllProfilss() {
+    public List<ProfileCardDTO> getAllProfiles(String userName) {
+        Optional<User> user = userRepository.findByUsername(userName);
         List<ProfileCardDTO> profileCard = companyProfileRepository.findProfileCard();
+        List<Followers> follow = followRepository.findAllByUser(user.get());
 
-        profileCard.forEach(profileCardDTO -> {
-            profileCardDTO.setProfileImagePath(imagePath.getBase64FromFile(profileCardDTO.getProfileImagePath()));
-        });
-        return profileCard;
+        List<ProfileCardDTO> profileCardDTOS = new ArrayList<>();
+        for (ProfileCardDTO profiles : profileCard) {
+            for (Followers followers : follow) {
+                if (profiles.getId() == followers.getId()){
+                    profiles.setProfileImagePath(imagePath.getBase64FromFile(profiles.getProfileImagePath()));
+                    profileCardDTOS.add(profiles);
+
+                }
+            }
+        }
+        return profileCardDTOS;
     }
 }

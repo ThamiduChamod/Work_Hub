@@ -1,11 +1,13 @@
 package lk.ijse.gdse.springboot.back_end.controller;
 
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
+import lk.ijse.gdse.springboot.back_end.dto.FollowersDTO;
 import lk.ijse.gdse.springboot.back_end.dto.JobPostDTO;
 import lk.ijse.gdse.springboot.back_end.dto.ProfilePhotoNameDTO;
+import lk.ijse.gdse.springboot.back_end.service.FollowService;
 import lk.ijse.gdse.springboot.back_end.service.UserPostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -13,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 //import org.springframework.data.domain.Pageable;
 //import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 public class UserPagePostController {
 
     private final UserPostService userPostService;
+    private final FollowService followService;
 
     @GetMapping("/allPost")
     public APIResponse allPost( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
@@ -53,11 +55,21 @@ public class UserPagePostController {
 
 
     @GetMapping("/getAllProfile")
-    public APIResponse getAllProfile() {
+    public APIResponse getAllProfile(Authentication authentication) {
         return new APIResponse(
                 200,
                 "get all profiles",
-                userPostService.getAllProfilss()
+                userPostService.getAllProfiles(authentication.getName())
+        );
+    }
+
+    @PostMapping("/addFollowers")
+    public APIResponse addFollowers(@RequestBody FollowersDTO followersDTO) {
+        boolean b = followService.addFollower(followersDTO);
+        return new APIResponse(
+                200,
+                "Follow",
+                b
         );
     }
 

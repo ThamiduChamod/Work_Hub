@@ -12,6 +12,8 @@ import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class FollowService {
@@ -22,15 +24,17 @@ public class FollowService {
 
     public boolean addFollower(FollowersDTO followersDTO) {
         User user = userRepository.findUserByUsername(followersDTO.getUserName());
+
+        Optional<CompanyProfile> byId = companyProfileRepository.findById(followersDTO.getCompany_id());
+        if (byId.isEmpty()) return false;
+
         UserProfile userProfile = userProfileRepository.findAllByUser(user);
 
-        User company = userRepository.findAllById(followersDTO.getCompany_id());
-        CompanyProfile companyProfile = companyProfileRepository.findByuser(company);
 
         try {
             Followers followers = new Followers();
             followers.setUser(userProfile);
-            followers.setCompany(companyProfile);
+            followers.setCompany(byId.get());
             followRepository.save(followers);
             return true;
         }catch (Exception e){
