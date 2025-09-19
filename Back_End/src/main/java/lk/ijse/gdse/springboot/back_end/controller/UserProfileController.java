@@ -77,4 +77,14 @@ public class UserProfileController {
         );
     }
 
+    @GetMapping("/notifications")
+    private APIResponse getNotification( Authentication authentication) {
+        System.out.println("qqqqqqqqqqqq");
+        return new APIResponse(
+                200,
+                "send notification",
+                    userProfileService.getNotifications(authentication.getName())
+                );
+    }
+
 }

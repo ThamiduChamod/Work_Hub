@@ -7,14 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("company")
+@RequestMapping("/company")
 @CrossOrigin
 @RequiredArgsConstructor
 public class CreateJobController {
 
     private final CreateJobService createJobService;
 
-    @PostMapping("postJob")
+    @PostMapping("/postJob")
     public APIResponse postJob (@RequestBody CreateJobDTO createJobDTO) {
 //        System.out.println(createJobDTO);
         return new APIResponse(

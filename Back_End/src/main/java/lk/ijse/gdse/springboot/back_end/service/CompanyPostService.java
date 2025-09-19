@@ -8,6 +8,7 @@ import lk.ijse.gdse.springboot.back_end.entity.User;
 import lk.ijse.gdse.springboot.back_end.repository.CompanyProfileRepository;
 import lk.ijse.gdse.springboot.back_end.repository.JobPostRepository;
 import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
+import lk.ijse.gdse.springboot.back_end.util.ImagePath;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class CompanyPostService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final CompanyProfileRepository companyProfileRepository;
+    private final ImagePath imagePath;
 
     public List<JobPostDTO> getAllPostByUserName(String name) {
         User userByUsername = userRepository.findUserByUsername(name);
@@ -40,7 +42,7 @@ public class CompanyPostService {
                     .map(post -> {
                         JobPostDTO dto = modelMapper.map(post, JobPostDTO.class);
                         dto.setUsername(post.getUser().getId()); // extra field
-                        dto.setJobImagePath(getBase64FromFile(post.getJobImagePath()));
+                        dto.setJobImagePath(imagePath.getBase64FromFile(post.getJobImagePath()));
                         return dto;
                     })
                     .toList();
@@ -50,34 +52,6 @@ public class CompanyPostService {
         }
 
     }
-    public String getBase64FromFile(String filePath) {
-        try {
-            File file = new File(filePath);
-            if (!file.exists()) {
-                System.out.println("File does not exist: " + filePath);
-                return null;
-            }
-
-            // Read file bytes
-            byte[] fileBytes = Files.readAllBytes(file.toPath());
-
-            // Encode to base64
-            String base64 = Base64.getEncoder().encodeToString(fileBytes);
-
-            // Optionally add data URI prefix (detect extension)
-            String extension = "";
-            int dotIndex = filePath.lastIndexOf('.');
-            if (dotIndex > 0) {
-                extension = filePath.substring(dotIndex + 1);
-            }
-
-            return "data:image/" + extension + ";base64," + base64;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     public Object getProfilePitcherAndName(int userName) {
         System.out.println("run");
@@ -86,9 +60,8 @@ public class CompanyPostService {
         System.out.println(companyProfile);
         return new ProfilePhotoNameDTO(
             companyProfile.getCompanyName(),
-            getBase64FromFile(companyProfile.getProfileImagePath())
+            imagePath.getBase64FromFile(companyProfile.getProfileImagePath())
         );
-
-
     }
+
 }

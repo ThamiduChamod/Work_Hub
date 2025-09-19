@@ -52,5 +52,7 @@ public class CompanyProfile {
     private List<Followers> followers = new ArrayList<>();
 
 
+
+
 }
 

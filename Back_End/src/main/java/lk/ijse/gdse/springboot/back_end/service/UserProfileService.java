@@ -1,19 +1,18 @@
 package lk.ijse.gdse.springboot.back_end.service;
 
-import lk.ijse.gdse.springboot.back_end.dto.UserProfileAboutDTO;
-import lk.ijse.gdse.springboot.back_end.dto.UserProfileDTO;
-import lk.ijse.gdse.springboot.back_end.dto.UserProfileDetailsDTO;
-import lk.ijse.gdse.springboot.back_end.dto.UserProfileExperienceDTO;
+import lk.ijse.gdse.springboot.back_end.dto.*;
+import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
+import lk.ijse.gdse.springboot.back_end.entity.Notification;
 import lk.ijse.gdse.springboot.back_end.entity.User;
 import lk.ijse.gdse.springboot.back_end.entity.UserProfile;
-import lk.ijse.gdse.springboot.back_end.repository.FollowRepository;
-import lk.ijse.gdse.springboot.back_end.repository.UserProfileRepository;
-import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
+import lk.ijse.gdse.springboot.back_end.repository.*;
 import lk.ijse.gdse.springboot.back_end.util.ImagePath;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +23,8 @@ public class UserProfileService {
     private final ModelMapper modelMapper;
     private final ImagePath imagePath;
     private final FollowRepository followRepository;
+    private final NotificationRepository notificationRepository;
+    private final CompanyProfileRepository companyProfileRepository;
 
     public String updateOrSveUserProfile (UserProfileDetailsDTO userProfileDetailsDTO) {
         if (userProfileDetailsDTO == null) {
@@ -157,5 +158,21 @@ public class UserProfileService {
             return false;
         }
 
+    }
+
+    public List<NotificationDTO> getNotifications(String userName) {
+        User user = userRepository.findUserByUsername(userName);
+        List<Notification> notifications = notificationRepository.findAllByUserOrderByIdDesc(user);
+//        CompanyProfile profile = companyProfileRepository.findCompanyProfileByUser();
+        return notifications.stream()
+                .map(notification -> {
+                    System.out.println(notification.getJobPost().getUser().getCompanyProfile().getCompanyName());
+                    NotificationDTO dto = new NotificationDTO();
+                    dto.setMessage(notification.getMessage());
+                    dto.setCompanyName(notification.getJobPost().getUser().getCompanyProfile().getCompanyName());
+                    dto.setImage(imagePath.getBase64FromFile(notification.getImage()));
+                    return dto;
+                })
+                .toList();
     }
 }

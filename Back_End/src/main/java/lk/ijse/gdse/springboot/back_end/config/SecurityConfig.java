@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth->
                                 auth.requestMatchers("/auth/**").permitAll()
+                                        .requestMatchers("/notification/**").permitAll()
                                         .requestMatchers("/company/**").hasAuthority("ROLE_COMPANY")  // ✅ එකත් වැඩ කරනවා, role check bypass වෙනවා
 
                                         .requestMatchers("/user/**").hasAuthority("ROLE_USER")

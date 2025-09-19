@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,7 +41,9 @@ public class JobPost {
     @JoinColumn(name = "userId") // foreign key
     private User user;
 
-
+    // ✅ This must match the field name in Notification
+    @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
 
 
 }
