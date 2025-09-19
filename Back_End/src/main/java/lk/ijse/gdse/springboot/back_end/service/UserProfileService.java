@@ -170,7 +170,7 @@ public class UserProfileService {
                     NotificationDTO dto = new NotificationDTO();
                     dto.setMessage(notification.getMessage());
                     dto.setCompanyName(notification.getJobPost().getUser().getCompanyProfile().getCompanyName());
-                    dto.setImage(imagePath.getBase64FromFile(notification.getImage()));
+                    dto.setProfileImage(imagePath.getBase64FromFile(notification.getImage()));
                     return dto;
                 })
                 .toList();
@@ -183,5 +183,11 @@ public class UserProfileService {
         if (allByUser == null) return null;
         return imagePath.getBase64FromFile(allByUser.getProfileImage());
 
+    }
+
+    public int getUserId(String name) {
+        User user = userRepository.findUserByUsername(name);
+        if (user == null) return -1;
+        return user.getId();
     }
 }

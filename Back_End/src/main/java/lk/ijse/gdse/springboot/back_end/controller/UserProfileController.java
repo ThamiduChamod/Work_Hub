@@ -96,4 +96,13 @@ public class UserProfileController {
         );
     }
 
+    @GetMapping("/userId")
+    public APIResponse getUserId(Authentication authentication){
+        return new APIResponse(
+                200,
+                "get UserId",
+                userProfileService.getUserId(authentication.getName())
+        );
+    }
+
 }

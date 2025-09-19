@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class NotificationDTO {
     private String companyName;
     private String message;
-    private String image;
+    private String profileImage;
 }
