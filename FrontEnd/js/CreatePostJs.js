@@ -1,4 +1,5 @@
  const post = $('#post');
+const cansel = $("#cancel")
 
 let base64String = '';
 
@@ -22,6 +23,34 @@ let base64String = '';
      reader.readAsDataURL(file);
  }
 
+ function fillAll() {
+     let isValid = true; // flag
+
+     // fields array
+     const fields = [
+         '#jobTitle',
+         '#address',
+         '#experience',
+         '#salary',
+         '#jobType',
+         '#workMode',
+         '#skills'
+     ];
+
+     fields.forEach(selector => {
+         const field = $(selector);
+         if (!field.val().trim()) {
+             field.css("border-color", "red"); // empty → red
+             isValid = false;                  // mark as invalid
+         } else {
+             field.css("border-color", "");    // filled → normal
+         }
+     });
+
+     return isValid; // true if all filled, false if any empty
+ }
+
+
  function parseJwt (token) {
      const base64Url = token.split('.')[1];
      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -35,21 +64,24 @@ let base64String = '';
 
 //
 //  const playLoad = {
-//     "jobTitle": $('#jobTitle').val(),
-//     "address": $('#address').val(),
-//     "location":$('#jobLocations').val() ,
-//     "experienceRequired":  $('#experience').val(),
-//     "salaryRange":  $('#salary').val(),
-//     "jobType":  $('#jobType').val(),
-//     "workMode":  $('#workMode').val(),
-//     "skills":  $('#skillInput').val(),
-//     "jobDescription":  $('#jobContent').val(),
-//     "jobImagePath":  base64String,
-//     "createdAt": new Date(),
-//     "userName":  user.sub
+//      $('#jobTitle').val(),
+//     $('#address').val(),
+//     ('#jobLocations').val() ,
+//     $('#experience').val(),
+//     $('#salary').val(),
+//     $('#jobType').val(),
+//     $('#workMode').val(),
+//     $('#skillInput').val(),
+//     $('#jobContent').val(),
 // }
 
 post.on('click', function () {
+
+    if (!fillAll()) {
+        return;
+        // proceed with building jobData object / submit Ajax
+    }
+
     console.log($('#jobTitle').val())
     console.log($('#address').val())
     console.log($('#jobLocations').val())
@@ -84,12 +116,43 @@ post.on('click', function () {
         })
     }).then(response =>{
         if (response.status === 403) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
             throw new Error('403 Forbidden - Check if your role is correctly set to ROLE_COMPANY');
+
         }
         if (!response.ok) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
             throw new Error('HTTP error ' + response.status);
+
+
         }
         console.log(response.json())
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: "success",
+            title: "Post Create successfully"
+        });
+        window.location.href = "companyMainPage.html";
         // return response.json();
     });
 
@@ -98,4 +161,25 @@ post.on('click', function () {
 })
 
 
+cansel.on('click', function () {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Go Home Page!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "Ok!",
+                text: "Home Page.",
+                icon: "success"
+            });
 
+            window.location.href = "companyMainPage.html";
+
+        }
+    });
+});
