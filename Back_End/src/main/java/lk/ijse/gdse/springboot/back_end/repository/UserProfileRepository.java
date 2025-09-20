@@ -8,4 +8,5 @@ public interface UserProfileRepository extends JpaRepository <UserProfile, Long>
 
     UserProfile findAllByUser (User user);
 
+
 }

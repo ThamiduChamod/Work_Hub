@@ -52,7 +52,8 @@ public class CompanyProfile {
     private List<Followers> followers = new ArrayList<>();
 
 
-
+    @OneToMany(mappedBy = "companyProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chat> chats ;
 
 }
 

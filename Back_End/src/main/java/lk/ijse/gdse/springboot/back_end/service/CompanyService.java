@@ -7,6 +7,7 @@ import lk.ijse.gdse.springboot.back_end.repository.CompanyProfileRepository;
 import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
 import lk.ijse.gdse.springboot.back_end.util.ImagePath;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -26,6 +27,8 @@ public class CompanyService {
     private final CompanyProfileRepository companyProfileRepository;
     private final UserRepository userRepository;
     private final ImagePath imagePath;
+
+    private final ModelMapper modelMapper;
 
     public String saveOrUpdate(CompanyProfileDTO companyProfileDTO) {
 //        System.out.println("companyProfileDTO: " + companyProfileDTO);
@@ -104,21 +107,23 @@ public class CompanyService {
         System.out.println("userNmae" + userName);
 
         CompanyProfile companyProfile = companyProfileRepository.findCompanyProfileByUser(userId);
-
+            companyProfile.setProfileImagePath(imagePath.getBase64FromFile(companyProfile.getProfileImagePath()));
+            companyProfile.setBannerImagePath(imagePath.getBase64FromFile(companyProfile.getBannerImagePath()));
         System.out.println(companyProfile.getId());
 
-        return new CompanyProfileDTO(
-                imagePath.getBase64FromFile(companyProfile.getProfileImagePath()),
-                companyProfile.getCompanyName(),
-                imagePath.getBase64FromFile(companyProfile.getBannerImagePath()),
-                companyProfile.getTagline(),
-                companyProfile.getIndustry(),
-                companyProfile.getOverview(),
-                companyProfile.getMission(),
-                companyProfile.getVision(),
-                companyProfile.getLocations(),
-                companyProfile.getId().toString()
-        );
+        return modelMapper.map(companyProfile, CompanyProfileDTO.class);
+//        return new CompanyProfileDTO(
+//                imagePath.getBase64FromFile(companyProfile.getProfileImagePath()),
+//                companyProfile.getCompanyName(),
+//                imagePath.getBase64FromFile(companyProfile.getBannerImagePath()),
+//                companyProfile.getTagline(),
+//                companyProfile.getIndustry(),
+//                companyProfile.getOverview(),
+//                companyProfile.getMission(),
+//                companyProfile.getVision(),
+//                companyProfile.getLocations(),
+//                companyProfile.getId().toString()
+//        );
 
     }
 

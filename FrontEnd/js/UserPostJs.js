@@ -72,17 +72,17 @@ let jobs = [];
 }
 
     function renderPosts() {
-    const container = document.getElementById("previewContainer");
+        const container = document.getElementById("previewContainer");
 
         container.innerHTML = ""; // clear before rendering
 
-    jobs.forEach(job => {
-        postHeader(job.username, job.id);
+        jobs.forEach(job => {
+            postHeader(job.username, job.id);
 
-    const card = document.createElement("div");
-        card.classList.add("post-card");
+            const card = document.createElement("div");
+            card.classList.add("post-card");
 
-        card.innerHTML = `
+            card.innerHTML = `
                 <div class="post-header" class="post-header feed-profile" style="cursor:pointer;">
                      <img id="profileImg${job.id}" class="company-logo">
                     <divc lass="name" class="post-meta">
@@ -112,7 +112,7 @@ let jobs = [];
                 </div>
 
                 <div class="post-actions">
-                    <div class="post-action">
+                    <div id="chat${job.id}" class="post-action">
                         <i class="far fa-comments"></i> Chat
                     </div>
                     <div class="post-action">
@@ -154,9 +154,30 @@ let jobs = [];
                     console.warn("Image element not found for id:", id);
                 }
             })
-
-
     }
+
+function parseJwt(token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+}
+
+$(document).on("click", "[id^=chat]", function () {
+    let jobId = $(this).attr("id").replace("chat", "");
+    console.log("hi from job id:", jobId);
+
+    const token = localStorage.getItem("token");
+    let userName = parseJwt(token).sub;
+    console.log(userName);
+
+    // Encode special characters in URL
+    window.location.assign(`chat.html?jobId=${jobId}&userName=${encodeURIComponent(userName)}`);
+});
+
+
 
     // run render
 

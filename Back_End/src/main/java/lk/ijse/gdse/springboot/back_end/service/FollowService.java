@@ -25,8 +25,8 @@ public class FollowService {
     public boolean addFollower(FollowersDTO followersDTO) {
         User user = userRepository.findUserByUsername(followersDTO.getUserName());
 
-        Optional<CompanyProfile> byId = companyProfileRepository.findById(followersDTO.getCompany_id());
-        if (byId.isEmpty()) return false;
+        CompanyProfile byId = companyProfileRepository.findById(followersDTO.getCompany_id());
+        if (byId == null) return false;
 
         UserProfile userProfile = userProfileRepository.findAllByUser(user);
 
@@ -34,7 +34,7 @@ public class FollowService {
         try {
             Followers followers = new Followers();
             followers.setUser(userProfile);
-            followers.setCompany(byId.get());
+            followers.setCompany(byId);
             followRepository.save(followers);
             return true;
         }catch (Exception e){

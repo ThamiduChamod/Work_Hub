@@ -44,4 +44,7 @@ public class UserProfile {
     // Relationship with follow table
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Followers> follows = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chat> chats ;
 }

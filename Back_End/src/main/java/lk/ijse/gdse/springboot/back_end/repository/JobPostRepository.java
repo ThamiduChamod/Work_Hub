@@ -8,5 +8,6 @@ import java.util.List;
 public interface JobPostRepository extends JpaRepository<JobPost, Long> {
 
     List<JobPost> findByUser_Id(int username);
+    JobPost findById(int jobPostId);
 
 }

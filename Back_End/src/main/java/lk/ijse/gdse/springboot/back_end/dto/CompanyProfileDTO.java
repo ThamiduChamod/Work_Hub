@@ -18,6 +18,7 @@ import java.util.List;
 @ToString
 public class CompanyProfileDTO {
 
+    private int id;
     private String profileImage;
     private String companyName;
     private String bannerImage;
