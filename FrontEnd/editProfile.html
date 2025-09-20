@@ -155,7 +155,7 @@
 
       <div class="form-section">
         <h3 class="section-title"><i class="fas fa-map-marker-alt"></i> Locations</h3>
-        <textarea id="companyLocations" class="form-textarea" placeholder="Enter company locations" rows="4">Headquartered in San Francisco, with offices in New York, London, Tokyo, and Sydney. Our global presence allows us to serve clients around the world with localized support.</textarea>
+        <textarea id="companyLocations" class="form-textarea" placeholder="Enter company locations" rows="4"></textarea>
         <br>
         <button type="button" class="openMap" onclick="openModal()">Select Locations on Map</button>
       </div>
@@ -190,6 +190,7 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 <script src="js/EditProfileJs.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -315,15 +316,10 @@
 
   // -------------------------------------------------------------------
 
-  // Predefined location
-  var predefinedLocation = {
-    name: "IJSE - Institute of Software Engineering, Grace Peiris Road, Panadura DS Division, Kalutara District, Western Province, 12500, Sri Lanka",
-    lat: 6.7110646,
-    lng: 79.9097919
-  };
-
   var map = L.map('map').setView([7.8731, 80.7718], 7);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap contributors' }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'© OpenStreetMap contributors'
+  }).addTo(map);
 
   var markers = [];
   var selectedLocations = [];
@@ -334,14 +330,14 @@
             var center = e.geocode.center;
             var name = e.geocode.name;
             selectedLocations.push({name:name, lat:center.lat, lng:center.lng});
-            openModal(); // redraw
-            map.setView(center,12);
+            openModal();
+            map.setView(center, 12);
           }).addTo(map);
 
   // Manual click select
   map.on('click', function(e){
     selectedLocations.push({name:"Manual Selected", lat:e.latlng.lat, lng:e.latlng.lng});
-    openModal(); // redraw
+    openModal();
   });
 
   // Modal open/close
@@ -352,15 +348,10 @@
       map.invalidateSize();
 
       // Clear old markers
-      markers.forEach(m=>map.removeLayer(m));
+      markers.forEach(m => map.removeLayer(m));
       markers = [];
 
-      // Add predefined location if not already added
-      if(!selectedLocations.find(loc=>loc.name===predefinedLocation.name)) {
-        selectedLocations.push(predefinedLocation);
-      }
-
-      // Render all markers
+      // Render all selected markers
       selectedLocations.forEach(loc=>{
         var marker = L.marker([loc.lat, loc.lng]).addTo(map)
                 .bindPopup(loc.name + "<br>("+loc.lat.toFixed(4)+", "+loc.lng.toFixed(4)+")");
@@ -373,7 +364,7 @@
         map.fitBounds(group.getBounds().pad(0.2));
       }
 
-    }, 300);
+    }, 1000);
   }
 
   function closeModal() {
@@ -384,33 +375,29 @@
   // Set Locations
   document.getElementById("setLocationBtn").addEventListener("click", function(){
     if(selectedLocations.length>0){
-      console.log("Selected Locations:");
       let text = "";
       selectedLocations.forEach((loc,i)=>{
-        console.log(i+1+":", loc);
         text += (i+1)+". "+loc.name+" ("+loc.lat.toFixed(4)+", "+loc.lng.toFixed(4)+")\n";
       });
       document.getElementById("companyLocations").value = text;
+      console.log(text);
     } else {
-      document.getElementById("companyLocations").value = "No locations selected!";
-      console.log("No locations selected!");
+      document.getElementById("jobLocations").value = "No locations selected!";
     }
     closeModal();
   });
 
   // Clear Locations
   document.getElementById("clearBtn").addEventListener("click", function(){
-    markers.forEach(m=>map.removeLayer(m));
-    markers=[];
-    selectedLocations=[];
-    console.log("All locations cleared!");
+    markers.forEach(m => map.removeLayer(m));
+    markers = [];
+    selectedLocations = [];
   });
 
 
 
 
-
-//   ------------------------------------------------
+  //   ------------------------------------------------
 
 
 
