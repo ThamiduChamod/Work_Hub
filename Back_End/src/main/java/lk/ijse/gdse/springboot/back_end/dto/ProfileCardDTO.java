@@ -13,4 +13,5 @@ public class ProfileCardDTO {
     private String companyName;
     private String profileImagePath;
     private String followersCount;
+    private String userName;
 }

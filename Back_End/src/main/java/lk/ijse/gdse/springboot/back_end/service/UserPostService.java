@@ -84,14 +84,19 @@ public class UserPostService {
                 .collect(Collectors.toSet());
 
         // 5. All company cards
-        List<ProfileCardDTO> profileCards = companyProfileRepository.findProfileCard();
+        List<CompanyProfile> profileCards = companyProfileRepository.findAll();
+//        List<ProfileCardDTO> profileCards = (List<ProfileCardDTO>) all;
         List<ProfileCardDTO> profileCardDTOS = new ArrayList<>();
 
         // 6. Filter: add only companies NOT followed by user
-        for (ProfileCardDTO profileCard : profileCards) {
+        for (CompanyProfile profileCard : profileCards) {
+            ProfileCardDTO dto = new ProfileCardDTO();
             if (!followedCompanyIds.contains(profileCard.getId())) {
-                profileCard.setProfileImagePath(imagePath.getBase64FromFile(profileCard.getProfileImagePath()));
-                profileCardDTOS.add(profileCard);
+                dto.setId(profileCard.getId());
+                dto.setProfileImagePath(imagePath.getBase64FromFile(profileCard.getProfileImagePath()));
+                dto.setCompanyName(profileCard.getCompanyName());
+                dto.setUserName(profileCard.getUser().getUsername());
+                profileCardDTOS.add(dto);
             }
         }
 

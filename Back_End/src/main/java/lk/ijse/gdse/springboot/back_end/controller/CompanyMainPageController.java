@@ -19,9 +19,9 @@ public class CompanyMainPageController {
     private final CompanyService companyService;
 
     @GetMapping("getProfile")
-    public APIResponse getProfile(Authentication authentication) {
-        System.out.println(authentication.getName());
-        CompanyProfileDTO all = companyService.getAll(authentication.getName());
+    public APIResponse getProfile(@RequestParam String userName) {
+//        System.out.println(authentication.getName());
+        CompanyProfileDTO all = companyService.getAll(userName);
         return new APIResponse(
                 200,
                 "get all details",

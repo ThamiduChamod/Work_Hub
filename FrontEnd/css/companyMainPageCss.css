@@ -53,6 +53,13 @@ body {
     right: 20px;
     z-index: 10;
 }
+.home-profile{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    color: white;
+}
 
 .menu-icon {
     color: white;

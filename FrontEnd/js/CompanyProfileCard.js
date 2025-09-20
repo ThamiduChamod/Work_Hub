@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }).then(res => res.json())
             .then(response => {
                 companies = response.data;
-                console.log(companies.length)
+                console.log(companies)
                 companies.forEach(c => renderCompanyCard(c));
 
 
@@ -40,9 +40,17 @@ function renderCompanyCard(company) {
     const card = document.createElement("div");
     card.classList.add("d-flex", "flex-column", "align-items-center", "text-center", "company-card");
     card.style.cursor = "pointer";
+    // card.id = company.userName
+    card.addEventListener("click", function() {
+
+        console.log("Clicked Company ID:", company.userName);
+        localStorage.setItem("cardUserName", company.userName);
+
+        window.location.href = "companyMainPage.html";
+    });
 
     card.innerHTML = `
-        <img src="${company.profileImagePath}" 
+        <img  src="${company.profileImagePath}" 
              alt="Company Logo" 
              class="rounded-circle mb-2" 
              width="80" height="80">
@@ -57,29 +65,42 @@ function renderCompanyCard(company) {
 
     container.appendChild(card);
 
+    const followBtn = card.querySelector(".followBtn");
+    followBtn.addEventListener("click", function(e){
+        e.stopPropagation(); // prevents card click
 
-    $(`#${company.id}`).on('click', function () {
-        console.log("click", company.companyName);
-        const token = localStorage.getItem('token')
+        // Extract numeric company id from button id
+        const companyId = parseInt(this.id.replace("follow-", ""), 10);
+        console.log("Follow button clicked for company ID:", companyId);
+
+        const token = localStorage.getItem('token');
         const user = parseJwt(token);
-        console.log(user)
 
-        fetch("http://localhost:8080/user/addFollowers",{
-            method:'POST',
-            headers:{
+        fetch("http://localhost:8080/user/addFollowers", {
+            method: 'POST',
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
-            },body:JSON.stringify({
-                "company_id": company.id,
+            },
+            body: JSON.stringify({
+                "company_id": companyId,
                 "userName": user.sub
             })
-        }).then(res => res.json())
+        })
+            .then(res => res.json())
             .then(response => {
-                console.log(response.data)
-
-
-            })
+                if(response.data){
+                    followBtn.innerText = "Following";
+                    followBtn.disabled = true;
+                    Swal.fire({toast:true,position:"top-end",showConfirmButton:false,timer:3000,timerProgressBar:true,icon:"success",title:"Following"});
+                } else {
+                    Swal.fire({toast:true,position:"top-end",showConfirmButton:false,timer:3000,timerProgressBar:true,icon:"error",title:"Failed to follow"});
+                }
+            });
     });
+
+
+
 
 
 }

@@ -18,8 +18,8 @@ public interface CompanyProfileRepository extends JpaRepository<CompanyProfile, 
 
    CompanyProfile findById(long id);
 
-   @Query("SELECT new lk.ijse.gdse.springboot.back_end.dto.ProfileCardDTO(c.id, c.companyName, c.profileImagePath, c.followersCount) FROM CompanyProfile c")
-   List<ProfileCardDTO> findProfileCard();
+//   @Query("SELECT new lk.ijse.gdse.springboot.back_end.dto.ProfileCardDTO(c.id, c.companyName, c.profileImagePath, c.followersCount, c.com) FROM CompanyProfile c")
+//   List<ProfileCardDTO> findProfileCard();
 
 
 

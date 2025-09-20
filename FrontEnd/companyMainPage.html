@@ -17,12 +17,16 @@
         <img id="bannerImage" src="" alt="Company Banner">
 
         <!-- Top right menu -->
-        <div class="profile-menu">
+        <div class="profile-menu" id="profileMenu">
           <i class="fas fa-ellipsis-v menu-icon"></i>
           <div class="dropdown-menu">
             <button class="dropdown-item">Edit Profile</button>
             <button class="dropdown-item logout">Log Out</button>
           </div>
+        </div>
+        <div class="home-profile" id="profileHome">
+          <i class="fa-solid fa-house-user menu-icon"></i>
+          Home
         </div>
       </div>
 
@@ -30,7 +34,7 @@
       <div class="profile-content">
         <!-- Profile Avatar (Left Side) -->
         <div class="profile-avatar-container">
-          <div class="profile-avatar">TC</div>
+          <div class="profile-avatar"> </div>
         </div>
 
         <!-- Profile Info (Right Side) -->
@@ -49,7 +53,7 @@
             <!--                        <button class="follow-btn">-->
             <!--                            <i class="fas fa-plus"></i> Follow-->
             <!--                        </button>-->
-            <button class="message-btn">
+            <button class="message-btn" id="massageBtn">
               <i class="fas fa-envelope"></i> Message
             </button>
           </div>
@@ -60,7 +64,7 @@
       <div class="profile-nav">
         <div class="nav-item active" data-target="about">About</div>
         <div class="nav-item" data-target="posts">Posts</div>
-        <div class="nav-item" data-target="add">Add Post</div>
+        <div id="addaPost" class="nav-item" data-target="add">Add Post</div>
         <!--                <div class="nav-item" data-target="people">People</div>-->
         <!--                <div class="nav-item" data-target="chat">Chat</div>-->
       </div>
@@ -97,6 +101,24 @@
 <script>
   // Navigation tabs functionality
   document.addEventListener('DOMContentLoaded', function () {
+     const token = localStorage.getItem("token");
+     const role = parseJwt(token).role;
+     console.log(role)
+
+     if (role === "ROLE_USER"){
+       $("#profileMenu").css("display", "none");
+       $("#massageBtn").css("display", "none");
+       $("#addaPost").css("display", "none");
+       // $("#profileMenu").toggle();
+     }else {
+         $("#profileHome").css("display", "none")
+     }
+     $("#profileHome").on("click", function () {
+         localStorage.removeItem("cardUserName");
+         window.location.href = "UserHomePage.html";
+     });
+
+
     const navItems = document.querySelectorAll('.nav-item');
     const contentSections = document.querySelectorAll('.content-section');
 

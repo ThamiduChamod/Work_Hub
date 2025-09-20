@@ -1,6 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
     const token = localStorage.getItem("token")
-    fetch("http://localhost:8080/company/getProfile",{
+
+    const role = parseJwt(token).role;
+    let link = ''
+    let userName=''
+
+    if (role === "ROLE_COMPANY") {
+        link = "company"; userName = parseJwt(token).sub
+    } else{
+        link = "user"
+        userName = localStorage.getItem("cardUserName");
+    }
+
+
+    console.log(userName)
+
+    fetch(`http://localhost:8080/${link}/getProfile?userName=${userName}`,{
         method:"GET",
         headers:{
             'Content-Type': 'application/json',
@@ -14,6 +29,15 @@ document.addEventListener('DOMContentLoaded', function () {
             setData(profile);
         });
 });
+
+function parseJwt(token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+}
 
 function setData(profile) {
     // Suppose profile object එක server එකෙන් එනවා
