@@ -2,16 +2,18 @@ package lk.ijse.gdse.springboot.back_end.service;
 
 import lk.ijse.gdse.springboot.back_end.dto.ChatDTO;
 import lk.ijse.gdse.springboot.back_end.dto.CompanyProfileDTO;
-import lk.ijse.gdse.springboot.back_end.entity.Chat;
-import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
-import lk.ijse.gdse.springboot.back_end.entity.JobPost;
-import lk.ijse.gdse.springboot.back_end.entity.UserProfile;
+import lk.ijse.gdse.springboot.back_end.dto.GetChatDTO;
+import lk.ijse.gdse.springboot.back_end.dto.ProfilePhotoNameDTO;
+import lk.ijse.gdse.springboot.back_end.entity.*;
 import lk.ijse.gdse.springboot.back_end.repository.*;
 import lk.ijse.gdse.springboot.back_end.util.ImagePath;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -73,5 +75,63 @@ public class ChatService {
         Chat save = chatRepository.save(chat);
 
         return modelMapper.map(save, ChatDTO.class);
+    }
+
+    public List<GetChatDTO> findChatByUserName(String username) {
+        User user = userRepository.findUserByUsername(username);
+        CompanyProfile companyProfile = companyProfileRepository.findCompanyProfileByUser(user);
+        UserProfile userProfile = userProfileRepository.findAllByUser(user);
+
+        if (companyProfile == null) {
+            List<Chat> userChat = chatRepository.findByUserProfile(userProfile);
+            if (userChat == null) return null;
+
+            List<GetChatDTO> dtos = new ArrayList<>();
+                for (Chat chat : userChat) {
+                     GetChatDTO dto = new  GetChatDTO(
+                            modelMapper.map(chat, ChatDTO.class),
+                             imagePath.getBase64FromFile(chat.getCompanyProfile().getProfileImagePath()),
+                            chat.getCompanyProfile().getCompanyName()
+                    );
+                     dtos.add(dto);
+                }
+                return dtos;
+        }
+        List<Chat> companyChat = chatRepository.findByCompanyProfile(companyProfile);
+        if (companyChat == null) return null;
+
+
+        List<GetChatDTO> dtos = new ArrayList<>();
+        for (Chat chat : companyChat) {
+            GetChatDTO dto = new  GetChatDTO(
+                    modelMapper.map(chat, ChatDTO.class),
+                    imagePath.getBase64FromFile(chat.getUserProfile().getProfileImage()),
+                    chat.getUserProfile().getProfileName()
+            );
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    public ProfilePhotoNameDTO getProfile(String name) {
+        User user = userRepository.findUserByUsername(name);
+
+        if (user == null) return null;
+        ProfilePhotoNameDTO dto = new  ProfilePhotoNameDTO();
+        try {
+            CompanyProfile companyProfile = companyProfileRepository.findCompanyProfileByUser(user);
+            dto.setProfileImage(imagePath.getBase64FromFile(companyProfile.getProfileImagePath()));
+            dto.setCompanyName(companyProfile.getCompanyName());
+
+            return dto;
+        }catch (Exception e){
+            UserProfile userProfile = userProfileRepository.findAllByUser(user);
+
+            dto.setProfileImage(imagePath.getBase64FromFile(userProfile.getProfileImage()));
+            dto.setCompanyName(userProfile.getProfileName());
+            return dto;
+        }
+
+
     }
 }

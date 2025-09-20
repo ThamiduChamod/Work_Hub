@@ -1,5 +1,6 @@
 package lk.ijse.gdse.springboot.back_end.controller;
 
+
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
 import lk.ijse.gdse.springboot.back_end.dto.ChatDTO;
 import lk.ijse.gdse.springboot.back_end.service.ChatService;
@@ -8,27 +9,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/company")
 @CrossOrigin
 @RequiredArgsConstructor
-public class UserChatController {
+public class CompanyChatController {
     private final ChatService chatService;
 
-    @GetMapping("/searchCompany")
-    public APIResponse searchCompany(@RequestParam int jobId){
+    @GetMapping("/searchChats")
+    public APIResponse searchChats(@RequestParam String username){
+        System.out.println(username);
         return new APIResponse(
                 200,
                 "send Company",
-                        chatService.findCompanyByJobId(jobId)
-                );
-    }
-
-    @GetMapping("/searchChat")
-    public APIResponse searchChat(@RequestParam int companyProfile, String userName){
-        return new APIResponse(
-                200,
-                "get chatData",
-                chatService.getChatData(companyProfile,userName)
+                chatService.findChatByUserName(username)
         );
     }
 
@@ -42,18 +35,6 @@ public class UserChatController {
                 chatService.saveMessage(chatDTO)
         );
     }
-
-    @GetMapping("/searchChats")
-    public APIResponse searchChats(@RequestParam String username){
-        System.out.println(username);
-        return new APIResponse(
-                200,
-                "send Company",
-                chatService.findChatByUserName(username)
-        );
-    }
-
-
     @GetMapping("/getChatProfile")
     public APIResponse getProfile(Authentication authentication){
         return new APIResponse(
@@ -62,6 +43,4 @@ public class UserChatController {
                 chatService.getProfile(authentication.getName())
         );
     }
-
-
 }

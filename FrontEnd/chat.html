@@ -593,9 +593,9 @@
     <!-- Contacts sidebar -->
     <div class="contacts-sidebar">
         <div class="sidebar-header">
-            <div class="user-info">
-                <div class="user-avatar">Y</div>
-                <div class="user-name">You</div>
+            <div class="user-info" id="userInfo" style="cursor: pointer">
+                <img id="chatPhoto" class="user-avatar">
+                <div id="chatName" class="user-name">You</div>
             </div>
             <div class="sidebar-actions">
                 <i class="fas fa-status"></i>
@@ -729,47 +729,47 @@
         </div>
 
         <div class="chat-messages">
-            <div class="message received">
-                <div class="message-content">
-                    <p>Hey! How's it going?</p>
-                    <div class="message-time">2:30 PM</div>
-                </div>
-            </div>
+<!--            <div class="message received">-->
+<!--                <div class="message-content">-->
+<!--                    <p>Hey! How's it going?</p>-->
+<!--                    <div class="message-time">2:30 PM</div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="message sent">
-                <div class="message-content">
-                    <p>Hi Saman! I'm doing great. Just finished the project.</p>
-                    <div class="message-time">2:32 PM</div>
-                </div>
-            </div>
+<!--            <div class="message sent">-->
+<!--                <div class="message-content">-->
+<!--                    <p>Hi Saman! I'm doing great. Just finished the project.</p>-->
+<!--                    <div class="message-time">2:32 PM</div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="message received">
-                <div class="message-content">
-                    <p>That's awesome! Can you send me the files when you have a moment?</p>
-                    <div class="message-time">2:35 PM</div>
-                </div>
-            </div>
+<!--            <div class="message received">-->
+<!--                <div class="message-content">-->
+<!--                    <p>That's awesome! Can you send me the files when you have a moment?</p>-->
+<!--                    <div class="message-time">2:35 PM</div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="message sent">
-                <div class="message-content">
-                    <p>Sure thing! I'll email them to you in a bit.</p>
-                    <div class="message-time">2:36 PM</div>
-                </div>
-            </div>
+<!--            <div class="message sent">-->
+<!--                <div class="message-content">-->
+<!--                    <p>Sure thing! I'll email them to you in a bit.</p>-->
+<!--                    <div class="message-time">2:36 PM</div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="message received">
-                <div class="message-content">
-                    <p>Thanks! Also, are we still meeting tomorrow?</p>
-                    <div class="message-time">2:40 PM</div>
-                </div>
-            </div>
+<!--            <div class="message received">-->
+<!--                <div class="message-content">-->
+<!--                    <p>Thanks! Also, are we still meeting tomorrow?</p>-->
+<!--                    <div class="message-time">2:40 PM</div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="message sent">
-                <div class="message-content">
-                    <p>Yes, 3 PM at the usual coffee place. See you then! 😊</p>
-                    <div class="message-time">2:42 PM</div>
-                </div>
-            </div>
+<!--            <div class="message sent">-->
+<!--                <div class="message-content">-->
+<!--                    <p>Yes, 3 PM at the usual coffee place. See you then! 😊</p>-->
+<!--                    <div class="message-time">2:42 PM</div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
         <div class="chat-input">
@@ -789,10 +789,25 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 
 <script>
+    document.getElementById("userInfo").addEventListener("click", () => {
+
+        const token = localStorage.getItem("token");
+        console.log(parseJwt(token).role);
+        const role = parseJwt(token).role;
+        if (role === 'ROLE_USER'){
+            window.location.href = "UserHomePage.html";
+        }else {
+            window.location.href = "companyMainPage.html";
+        }
+
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const contacts = document.querySelectorAll('.contact');
         const chatHeader = document.querySelector('.chat-header');
@@ -801,91 +816,14 @@
         const menuToggle = document.querySelector('.menu-toggle');
         const contactsSidebar = document.querySelector('.contacts-sidebar');
 
+        loadProfile();
 
-        // Store conversations for each contact
-        const conversations = {
-            saman: [
-                { sender: 'them', text: 'Hey! How\'s it going?', time: '2:30 PM' },
-                { sender: 'you', text: 'Hi Saman! I\'m doing great. Just finished the project.', time: '2:32 PM' },
-                { sender: 'them', text: 'That\'s awesome! Can you send me the files when you have a moment?', time: '2:35 PM' },
-                { sender: 'you', text: 'Sure thing! I\'ll email them to you in a bit.', time: '2:36 PM' },
-                { sender: 'them', text: 'Thanks! Also, are we still meeting tomorrow?', time: '2:40 PM' },
-                { sender: 'you', text: 'Yes, 3 PM at the usual coffee place. See you then! 😊', time: '2:42 PM' }
-            ],
-            kamal: [
-                { sender: 'them', text: 'Hi, did you get a chance to review the proposal?', time: '10:15 AM' },
-                { sender: 'you', text: 'Yes, I went through it yesterday. Looks good overall!', time: '10:20 AM' },
-                { sender: 'them', text: 'Great! Any specific feedback?', time: '10:22 AM' },
-                { sender: 'you', text: 'Just a few minor suggestions. I\'ll send them over today.', time: '10:25 AM' }
-            ],
-            nimal: [
-                { sender: 'them', text: 'Are you available for a quick call?', time: '12:15 PM' },
-                { sender: 'you', text: 'I can talk in about 30 minutes. Will that work?', time: '12:18 PM' },
-                { sender: 'them', text: 'Perfect! Talk to you then.', time: '12:20 PM' }
-            ],
-            sachini: [
-                { sender: 'you', text: 'Hi Sachini, did you need help with something?', time: '3:45 PM' },
-                { sender: 'them', text: 'Yes, thanks for asking! I had a question about the design.', time: '3:50 PM' },
-                { sender: 'you', text: 'Happy to help! What\'s the question?', time: '3:52 PM' }
-            ],
-            amal: [
-                { sender: 'them', text: 'Let\'s meet next week to discuss the project', time: '9:30 AM' },
-                { sender: 'you', text: 'Sure, what day works best for you?', time: '9:35 AM' },
-                { sender: 'them', text: 'How about Tuesday afternoon?', time: '9:40 AM' }
-            ],
-            priya: [
-                { sender: 'them', text: 'Did you see my message about the event?', time: '4:30 PM' },
-                { sender: 'you', text: 'Not yet, let me check.', time: '4:35 PM' },
-                { sender: 'them', text: 'It\'s about the conference next month.', time: '4:40 PM' }
-            ],
-            dilshan: [
-                { sender: 'them', text: 'The meeting is confirmed for 10 AM', time: '11:15 AM' },
-                { sender: 'you', text: 'Great! I\'ll prepare the presentation.', time: '11:20 AM' },
-                { sender: 'them', text: 'Perfect. Looking forward to it.', time: '11:25 AM' }
-            ]
-        };
-
-        //methana thibbe
-
-        // Toggle sidebar on mobile
         menuToggle.addEventListener('click', function() {
             contactsSidebar.classList.toggle('active');
         });
 
         // Send message functionality
-        const messageInput = document.querySelector('.chat-input input');
-        const sendButton = document.querySelector('.send-button');
 
-        function sendMessage() {
-            console.log("send ")
-            const message = messageInput.value.trim();
-            if (message) {
-                const now = new Date();
-                const time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
-
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message', 'sent');
-                messageElement.innerHTML = `
-                        <div class="message-content">
-                            <p>${message}</p>
-                            <div class="message-time">${time}</div>
-                        </div>
-                    `;
-                chatMessages.appendChild(messageElement);
-                messageInput.value = '';
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                const messageObj = {
-                    sender: "user",  // or 'them'
-                    text: message,
-                    time: time
-                };
-
-                console.log(messageObj);
-                sendMessageApi(messageObj);
-                // Simulate reply after a short delay
-                // setTimeout(simulateReply, 1000);
-            }
-        }
 
         function simulateReply() {
             const replies = [
@@ -936,15 +874,23 @@
     });
     
     function sendMessageApi(message) {
-        console.log(chat.id)
-        const token = localStorage.getItem('token')
-        fetch(`http://localhost:8080/user/saveMessages`, {
+        const token = localStorage.getItem("token");
+        console.log(parseJwt(token).role);
+        const role = parseJwt(token).role;
+        let link ='';
+        if (role === 'ROLE_USER'){
+            link = 'user';
+        }else {
+            link = 'company'
+        }
+        console.log(chatId)
+        fetch(`http://localhost:8080/${link}/saveMessages`, {
             method:'POST',
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
             },body: JSON.stringify({
-                id: chat.id,
+                id: chatId,
                 userProfileId: "",
                 companyProfileId:"",
                 message:JSON.stringify(message),
@@ -959,6 +905,38 @@
     }
 
 
+    function loadProfile(){
+
+        const token = localStorage.getItem("token");
+        console.log(parseJwt(token).role);
+        const role = parseJwt(token).role;
+        let link ='';
+        if (role === 'ROLE_USER'){
+            link = 'user';
+        }else {
+            link = 'company'
+        }
+
+        fetch(`http://localhost:8080/${link}/getChatProfile`, {
+            method:'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
+        .then(res => res.json())
+            .then(response => {
+
+                console.log("profile loaded")
+                console.log(response.data);
+
+                $("#chatPhoto").attr("src", response.data.profileImage);
+                $("#chatName").text(response.data.companyName);
+
+
+            })
+    }
+
 
     const urlParams = new URLSearchParams(window.location.search);
     const jobId = urlParams.get("jobId");
@@ -969,9 +947,156 @@
     console.log("Username:", decodeURIComponent(user)); // shehan.nethsara2003@gmail.com
 
 
-    if(jobId){
+    if(jobId !== -1&& jobId > -1){
        openChat(jobId)
-   }
+   }else {
+        loadChats(userName)
+    }
+
+    let userChats =[];
+    let chatId = -1;
+    function loadChats(username) {
+        const token = localStorage.getItem('token')
+        fetch(`http://localhost:8080/company/searchChats?username=${username}`, {
+            method:'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(res => res.json())
+            .then(response => {
+
+                console.log(response.data);
+                setContact(response.data);
+                userChats= response.data;
+                if (response.data === null){
+                    Swal.fire({
+                        title: "The Internet?",
+                        text: "That thing is still around?",
+                        icon: "question"
+                    });
+                }
+
+
+            })
+
+        function setContact(chat) {
+            const chats = Array.isArray(chat) ? chat : [chat];
+            // 2️⃣ Get container
+            const contactsList = document.getElementById("contactsList");
+
+            // 3️⃣ Loop through contacts and add to DOM
+            chats.forEach(chat => {
+                const contactDiv = document.createElement("div");
+                contactDiv.classList.add("contact");
+                contactDiv.classList.add("active"); // first contact active by default
+                contactDiv.setAttribute("data-contact", chat.chatDTO.id);
+
+                contactDiv.innerHTML = `
+                       <img class="contact-avatar" src="${chat.profileImage}">
+                      <div class="contact-info">
+                     <div class="contact-name">${chat.profileName}</div>
+                </div>
+                `;
+
+                contactsList.appendChild(contactDiv);
+            });
+            // 4️⃣ Click event for contacts
+            contactsList.addEventListener("click", (e) => {
+                const contact = e.target.closest(".contact");
+                if(!contact) return;
+
+                // Remove active class from all
+                document.querySelectorAll(".contact").forEach(c => c.classList.remove("active"));
+
+                // Add active class to clicked contact
+                contact.classList.add("active");
+
+                const contactId = contact.getAttribute("data-contact");
+                console.log("Clicked contact ID:", contactId);
+
+                // 👇 call your chat open function
+                openChat(contactId);
+            });
+
+            function openChat(contactId){
+                console.log("Open chat with:", contactId);
+                const chatsArray = Array.isArray(userChats) ? userChats : [userChats];
+                chatsArray.forEach(chat =>{
+                    console.log(chat.chatDTO.id)
+                    console.log(contactId)
+                    if(chat.chatDTO.id.toString() === contactId){
+                        console.log("ssssssssssssss")
+                        const container = document.getElementById("chatUserInfo");
+
+                        container.innerHTML = `
+                           <div class="chat-user-info">
+                              <img class="user-avatar" src="${chat.profileImage}">
+                            <div>
+                            <div class="user-name">${chat.profileName}</div>
+                            <div class="user-status">Active</div>
+                           </div>
+                            </div>
+                              `;
+                        loadConversation(contactId,chat.chatDTO);
+                        chatId = chat.chatDTO.id
+                    }
+
+                })
+
+
+                // Add logic to load chat messages dynamically
+            }
+        }
+
+        function loadConversation(contactId,chat) {
+            // const conversation = conversations[contactId];
+            const token = localStorage.getItem("token");
+            console.log(parseJwt(token).role);
+            const role = parseJwt(token).role;
+
+            // Clear current messages
+            chatMessages.innerHTML = '';
+
+            // Add messages to chat
+            console.log(chat)
+            const messages = chat.message.match(/\{.*?\}/g);
+            messages.forEach(msg => {
+                const obj = JSON.parse(msg);
+                console.log(msg)
+                console.log(obj.text)
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', obj.sender ===  role ? 'sent' : 'received');
+                messageElement.innerHTML = `
+                        <div class="message-content">
+                            <p>${obj.text}</p>
+                            <div class="message-time">${obj.time}</div>
+                        </div>
+                    `;
+                chatMessages.appendChild(messageElement);
+            });
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Update chat header with contact info
+            const contactName = document.querySelector(`.contact[data-contact="${contactId}"] .contact-name`).textContent;
+            const contactAvatar = document.querySelector(`.contact[data-contact="${contactId}"] .contact-avatar`).textContent;
+
+            document.querySelector('.chat-user-info .user-name').textContent = contactName;
+            document.querySelector('.chat-user-info .user-avatar').textContent = contactAvatar;
+
+            // On mobile, close sidebar after selecting a contact
+            if (window.innerWidth <= 600) {
+                contactsSidebar.classList.remove('active');
+            }
+        }
+
+
+    }
+
+
+
 
     function openChat(jobId) {
         console.log("open chat")
@@ -993,7 +1118,7 @@
                 // setContact(response.data);
             })
     }
-    let chat = -1;
+
     function getChats(company, user) {
         const token = localStorage.getItem('token')
         fetch(`http://localhost:8080/user/searchChat?companyProfile=${company.id}&userName=${user}`, {
@@ -1053,17 +1178,18 @@
            console.log("Open chat with:", contactId);
            setChatUserInfo(company)
            loadConversation(contactId,company,chat);
+           chatId = contactId
            // Add logic to load chat messages dynamically
        }
    }
     let chatMessages = document.querySelector('.chat-messages');
     let chatHeader = document.querySelector('.chat-header');
 
-
-
-
     // Function to load a conversation
     function loadConversation(contactId, company,chat) {
+        const token = localStorage.getItem("token");
+        console.log(parseJwt(token).role);
+        const role = parseJwt(token).role;
         // const conversation = conversations[contactId];
 
         // Clear current messages
@@ -1077,7 +1203,7 @@
             console.log(msg)
             console.log(obj.text)
             const messageElement = document.createElement('div');
-            messageElement.classList.add('message', obj.sender === 'user' ? 'sent' : 'received');
+            messageElement.classList.add('message', obj.sender === role ? 'sent' : 'received');
             messageElement.innerHTML = `
                         <div class="message-content">
                             <p>${obj.text}</p>
@@ -1119,6 +1245,7 @@
     // });
 
     function setChatUserInfo(user) {
+        console.log(user)
         const container = document.getElementById("chatUserInfo");
 
         container.innerHTML = `
@@ -1126,15 +1253,59 @@
             <img class="user-avatar" src="${user.profileImage}">
             <div>
                 <div class="user-name">${user.companyName}</div>
-                <div class="user-status">${user.status}</div>
+                <div class="user-status">ActiveNow</div>
             </div>
         </div>
     `;
     }
 
-    // Example usage
+    const messageInput = document.querySelector('.chat-input input');
+
+    const sendButton = document.querySelector('.send-button');
+
+    function sendMessage() {
+        const token = localStorage.getItem("token");
+         const role =parseJwt(token).role;
 
 
+        console.log("send ")
+        const message = messageInput.value.trim();
+        if (message) {
+            const now = new Date();
+            const time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'sent');
+            messageElement.innerHTML = `
+                        <div class="message-content">
+                            <p>${message}</p>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    `;
+            chatMessages.appendChild(messageElement);
+            messageInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            const messageObj = {
+                sender: role ,  // or 'them'
+                text: message,
+                time: time
+            };
+
+            console.log(messageObj);
+            sendMessageApi(messageObj);
+            // Simulate reply after a short delay
+            // setTimeout(simulateReply, 1000);
+        }
+    }
+
+    function parseJwt(token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    }
 
 
 
