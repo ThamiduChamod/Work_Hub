@@ -162,6 +162,27 @@
 
 
 /* ===== Glass Effect Header ===== */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.2); /* semi-transparent white */
+    --glass-blur: 12px;
+}
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.15);   /* background transparency */
+    --glass-blur: 12px;                      /* blur amount */
+    --glass-border: 1px solid rgba(255,255,255,0.3); /* border transparency */
+    --accent: #0b0b0b;  /* red accent color */
+    --accent-hover: #4cff8b;
+}
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 20px;
+    color: #fff;
+}
+
 header.topbar {
     background: var(--glass-bg) !important;
     backdrop-filter: blur(12px) saturate(180%);
@@ -419,7 +440,7 @@ header.topbar {
 .company-logo {
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #0066cc 0%, #003366 100%);
+    /*background: linear-gradient(135deg, #0066cc 0%, #003366 100%);*/
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -554,7 +575,7 @@ header.topbar {
 
 .post-action {
     background: #f0f6ff;
-    color: #1f3a60;
+    /*color: #1f3a60;*/
     padding: 8px 14px;
     border-radius: 20px;
     font-size: 14px;
@@ -568,7 +589,7 @@ header.topbar {
 }
 
 .post-action i {
-    color: #0066cc;
+    /*color: #0066cc;*/
     font-size: 14px;
 }
 

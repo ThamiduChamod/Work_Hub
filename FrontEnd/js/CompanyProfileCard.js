@@ -93,6 +93,7 @@ function renderCompanyCard(company) {
                     followBtn.innerText = "Following";
                     followBtn.disabled = true;
                     Swal.fire({toast:true,position:"top-end",showConfirmButton:false,timer:3000,timerProgressBar:true,icon:"success",title:"Following"});
+                    card.remove();
                 } else {
                     Swal.fire({toast:true,position:"top-end",showConfirmButton:false,timer:3000,timerProgressBar:true,icon:"error",title:"Failed to follow"});
                 }

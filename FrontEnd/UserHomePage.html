@@ -9,506 +9,83 @@
     <link href="css/UserHomePageCss.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!--    <style>-->
-<!--      -->
+    <style>
+        /*h1 { text-align:center; color:#333; margin-bottom:20px; }*/
+        .form-section { margin-bottom:25px; }
+        /*.form-section h3 { color:#4CAF50; margin-bottom:10px; display:flex; align-items:center; gap:8px; }*/
+        .form-section textarea { width:100%; border-radius:8px; border:1px solid #ccc; padding:10px; font-size:14px; resize:none; }
+        .openMap { background: white;  color: #424141; border:none; ; font-size:14px; border-radius:6px; cursor:pointer; transition:0.3s; }
+        .openMap:hover{color: #1a5edb}
+        .form-section button:hover { opacity:0.9; }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.6); animation: fadeInBg 0.3s ease; }
+        @keyframes fadeInBg { from{opacity:0;} to{opacity:1;} }
+        .modal-content { background:#fff; margin:5% auto; padding:15px; width:90%; max-width:1200px; max-height:100vh; overflow-y:auto; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: scaleIn 0.3s ease; position:relative; }
+        @keyframes scaleIn { from{transform:scale(0.95); opacity:0;} to{transform:scale(1); opacity:1;} }
+
+        .close { position:absolute; top:2px; right:20px; font-size:35px; font-weight:bold; cursor:pointer; color:#333; transition:0.3s; }
+        .close:hover { color:#f44336; }
+
+        #map { height: 65vh; width: 100%; border-radius:10px; border:1px solid #ccc; margin-bottom:15px; }
+
+        #controls { text-align:center; margin-top:10px; display:flex; justify-content:center; gap:12px; }
+        #controls button { padding:8px 16px; font-size:14px; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s; }
+        /*#setLocationBtn { background:#4CAF50; color:#fff; border:none; }*/
+        /*#setLocationBtn:hover { opacity:0.9; }*/
+        /*#clearBtn { background:#f44336; color:#fff; border:none; }*/
+        /*#clearBtn:hover { opacity:0.9; }*/
+
+        /* Popup marker custom style */
+        .leaflet-popup-content-wrapper { border-radius:8px; border:1px solid #4CAF50; }
+        .leaflet-popup-content { font-size:14px; line-height:1.4; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* icon සහ text එක අතර gap */
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent, #40ff00); /* default accent color */
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .brand i {
+            font-size: 1.8rem;
+            color: var(--accent, #7e7e7e);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .brand:hover i {
+            transform: rotate(-10deg) scale(1.1);
+            color: #69ac3d;
+        }
+
+    </style>
 
-<!--        /* ===== Glass Effect Header ===== */-->
-<!--        header.topbar {-->
-<!--            background: rgba(255,255,255,0.25);-->
-<!--            backdrop-filter: blur(12px) saturate(180%);-->
-<!--            border-bottom: 1px solid rgba(255,255,255,0.3);-->
-<!--            box-shadow: 0 8px 24px rgba(0,0,0,0.05);-->
-<!--        }-->
 
-<!--        /* Brand */-->
-<!--        header .brand {-->
-<!--            font-weight: 700;-->
-<!--            font-size: 1.25rem;-->
-<!--            color: #2b7cff;-->
-<!--            letter-spacing: 0.5px;-->
-<!--        }-->
-
-<!--        /* Search Input */-->
-<!--        header input[type="search"] {-->
-<!--            background: rgba(255,255,255,0.35);-->
-<!--            backdrop-filter: blur(8px);-->
-<!--            border: 1px solid rgba(255,255,255,0.5);-->
-<!--            box-shadow: 0 4px 12px rgba(0,0,0,0.08);-->
-<!--            transition: all 0.3s ease;-->
-<!--        }-->
-
-<!--        header input[type="search"]:focus {-->
-<!--            background: rgba(255,255,255,0.55);-->
-<!--            border-color: #2b7cff;-->
-<!--            box-shadow: 0 6px 16px rgba(43,124,255,0.2);-->
-<!--        }-->
-
-<!--        /* Buttons with glass effect */-->
-<!--        .btn-light {-->
-<!--            background: rgba(255,255,255,0.35);-->
-<!--            backdrop-filter: blur(8px);-->
-<!--            border: 1px solid rgba(255,255,255,0.4);-->
-<!--            transition: all 0.3s ease;-->
-<!--        }-->
-
-<!--        .btn-light:hover {-->
-<!--            background: rgba(43,124,255,0.2);-->
-<!--            color: #2b7cff;-->
-<!--            transform: scale(1.05);-->
-<!--        }-->
-
-<!--        /* Profile Image */-->
-<!--        #userProfilePhoto {-->
-<!--            border: 2px solid rgba(255,255,255,0.6);-->
-<!--            box-shadow: 0 4px 12px rgba(0,0,0,0.08);-->
-<!--            transition: transform 0.3s ease;-->
-<!--        }-->
-
-<!--        #userProfilePhoto:hover {-->
-<!--            transform: scale(1.1);-->
-<!--        }-->
-
-<!--        /* ===== Glass Cards ===== */-->
-<!--        .card-custom {-->
-<!--            background: rgba(255,255,255,0.25);-->
-<!--            backdrop-filter: blur(12px) saturate(180%);-->
-<!--            border: 1px solid rgba(255,255,255,0.3);-->
-<!--            box-shadow: 0 8px 24px rgba(0,0,0,0.05);-->
-<!--            transition: transform 0.2s ease, box-shadow 0.3s ease;-->
-<!--        }-->
-
-<!--        .card-custom:hover {-->
-<!--            transform: translateY(-4px);-->
-<!--            box-shadow: 0 12px 32px rgba(0,0,0,0.08);-->
-<!--        }-->
-
-<!--        /* Sidebar Glass */-->
-<!--        aside .card-custom {-->
-<!--            background: rgba(255,255,255,0.2);-->
-<!--            backdrop-filter: blur(12px) saturate(150%);-->
-<!--            border: 1px solid rgba(255,255,255,0.25);-->
-<!--            box-shadow: 0 6px 18px rgba(0,0,0,0.05);-->
-<!--        }-->
-
-<!--        /* Notification Card Glass */-->
-<!--        .notification-card {-->
-<!--            background: rgba(255,255,255,0.25);-->
-<!--            backdrop-filter: blur(12px) saturate(180%);-->
-<!--            border: 1px solid rgba(255,255,255,0.3);-->
-<!--            box-shadow: 0 8px 20px rgba(0,0,0,0.08);-->
-<!--            transition: transform 0.3s ease, opacity 0.3s ease;-->
-<!--        }-->
-
-<!--        /* Notification Text */-->
-<!--        .notification-text h3 {-->
-<!--            color: #2b7cff;-->
-<!--        }-->
-<!--        .notification-text span {-->
-<!--            color: rgba(0,0,0,0.7);-->
-<!--        }-->
-
-<!--        /* Glass Buttons */-->
-<!--        .followBtn {-->
-<!--            background: rgba(255,255,255,0.25);-->
-<!--            backdrop-filter: blur(12px);-->
-<!--            border: 1px solid rgba(255,255,255,0.35);-->
-<!--            color: #2b7cff;-->
-<!--            transition: all 0.3s ease;-->
-<!--        }-->
-
-<!--        .followBtn:hover {-->
-<!--            background: rgba(43,124,255,0.2);-->
-<!--            color: #fff;-->
-<!--        }-->
-
-<!--        /* Glass effect for post-actions */-->
-<!--        .post-action {-->
-<!--            background: rgba(255,255,255,0.25);-->
-<!--            backdrop-filter: blur(10px);-->
-<!--            border: 1px solid rgba(255,255,255,0.3);-->
-<!--        }-->
-
-<!--        .post-action:hover {-->
-<!--            background: rgba(43,124,255,0.15);-->
-<!--            color: #2b7cff;-->
-<!--        }-->
-<!--        /*===================================*/-->
-
-<!--        body {-->
-<!--            background: linear-gradient(135deg, #f3f6f8 0%, #e9eef3 100%);-->
-<!--            font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;-->
-<!--        }-->
-<!--        header.topbar {-->
-<!--            background: rgba(255, 255, 255, 0.8);-->
-<!--            backdrop-filter: blur(8px);-->
-<!--            border-bottom: 1px solid rgba(225,230,234,0.7);-->
-<!--            height: 64px;-->
-<!--        }-->
-<!--        .brand {-->
-<!--            font-weight: 600;-->
-<!--            font-size: 20px;-->
-<!--            color: #2b7cff;-->
-<!--        }-->
-
-<!--        /* Card with glassmorphism */-->
-<!--        .card-custom {-->
-<!--            height: 85vh;-->
-<!--            background: rgba(255,255,255,0.75);-->
-<!--            backdrop-filter: blur(12px);-->
-<!--            border: 1px solid rgba(225,230,234,0.6);-->
-<!--            border-radius: 16px;-->
-<!--            transition: transform 0.2s ease, box-shadow 0.2s ease;-->
-<!--            max-height: 85vh;   /* Sidebar එකේ උස fix කරන්න */-->
-<!--            overflow-y: auto;    /* Vertical scroll enable කරන්න */-->
-<!--            overflow-x: hidden;-->
-<!--            display: flex;         /* ✅ children align කරන්න */-->
-<!--            flex-direction: column;-->
-<!--            /*gap: 12px;*/-->
-<!--        }-->
-<!--        .card-custom::-webkit-scrollbar {-->
-<!--            display: none;-->
-<!--        }-->
-<!--        .card-custom:hover {-->
-<!--            transform: translateY(-2px);-->
-<!--            box-shadow: 0 8px 24px rgba(0,0,0,0.06);-->
-<!--        }-->
-<!--        .company-card{-->
-<!--            padding: 4px;-->
-<!--            border-radius: 10px;-->
-<!--            /*border: 1px solid black;*/-->
-<!--            margin-bottom: 10px;-->
-<!--            box-shadow: 6px 6px 12px #c5c5c5,-->
-<!--            -6px -6px 12px #ffffff;-->
-<!--        }-->
-
-<!--        /* Sidebar items */-->
-<!--        .sidebar-item {-->
-<!--            padding: 10px;-->
-<!--            border-radius: 10px;-->
-<!--            color: #65707a;-->
-<!--            cursor: pointer;-->
-<!--            transition: 0.2s;-->
-<!--        }-->
-<!--        .sidebar-item:hover {-->
-<!--            background: rgba(43,124,255,0.1);-->
-<!--            color: #2b7cff;-->
-<!--        }-->
-
-<!--        /* Sticky side panels */-->
-<!--        .sticky-sidebar {-->
-<!--            position: sticky;-->
-<!--            top: 80px;-->
-<!--        }-->
-
-<!--        /* Post header style */-->
-<!--        .post-header {-->
-<!--            display: flex;-->
-<!--            align-items: center;-->
-<!--            gap: 10px;-->
-<!--            margin-bottom: 10px;-->
-<!--        }-->
-<!--        .post-header img {-->
-<!--            width: 40px;-->
-<!--            height: 40px;-->
-<!--            border-radius: 50%;-->
-<!--            object-fit: cover;-->
-<!--        }-->
-<!--        .post-header .name {-->
-<!--            font-weight: 600;-->
-<!--            font-size: 15px;-->
-<!--        }-->
-<!--        .post-header .time {-->
-<!--            font-size: 12px;-->
-<!--            color: #87909a;-->
-<!--        }-->
-
-<!--        /*post ======================*/-->
-
-
-<!--        .post-card {-->
-<!--            background: white;-->
-<!--            border-radius: 12px;-->
-<!--            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);-->
-<!--            width: 100%;-->
-<!--            max-width: 800px;-->
-<!--            overflow: hidden;-->
-<!--            transition: transform 0.3s ease, box-shadow 0.3s ease;-->
-<!--            margin-bottom: 15px;-->
-<!--        }-->
-
-<!--        .post-card:hover {-->
-<!--            transform: translateY(-5px);-->
-<!--            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);-->
-<!--        }-->
-
-<!--        .post-header {-->
-<!--            display: flex;-->
-<!--            align-items: center;-->
-<!--            padding: 20px;-->
-<!--            border-bottom: 1px solid #f0f0f0;-->
-<!--        }-->
-
-<!--        .company-logo {-->
-<!--            width: 50px;-->
-<!--            height: 50px;-->
-<!--            background: linear-gradient(135deg, #0066cc 0%, #003366 100%);-->
-<!--            border-radius: 10px;-->
-<!--            display: flex;-->
-<!--            align-items: center;-->
-<!--            justify-content: center;-->
-<!--            margin-right: 15px;-->
-<!--            color: white;-->
-<!--            font-size: 20px;-->
-<!--            font-weight: bold;-->
-<!--            flex-shrink: 0;-->
-<!--        }-->
-
-<!--        .post-meta {-->
-<!--            flex-grow: 1;-->
-<!--        }-->
-
-<!--        .post-meta h3 {-->
-<!--            font-size: 18px;-->
-<!--            margin-bottom: 4px;-->
-<!--            color: #2c3e50;-->
-<!--        }-->
-
-<!--        .post-date {-->
-<!--            color: #7f8c8d;-->
-<!--            font-size: 14px;-->
-<!--            display: flex;-->
-<!--            align-items: center;-->
-<!--        }-->
-
-<!--        .post-date i {-->
-<!--            margin-right: 5px;-->
-<!--            font-size: 12px;-->
-<!--        }-->
-
-<!--        .post-menu {-->
-<!--            color: #95a5a6;-->
-<!--            cursor: pointer;-->
-<!--            padding: 5px;-->
-<!--            transition: color 0.3s;-->
-<!--        }-->
-
-<!--        .post-menu:hover {-->
-<!--            color: #0066cc;-->
-<!--        }-->
-
-<!--        .post-content {-->
-<!--            padding: 20px;-->
-<!--        }-->
-
-<!--        .post-text {-->
-<!--            margin-bottom: 20px;-->
-<!--            line-height: 1.7;-->
-<!--            color: #34495e;-->
-<!--        }-->
-
-<!--        .post-image {-->
-<!--            width: 100%;-->
-<!--            border-radius: 10px;-->
-<!--            margin-bottom: 10px;-->
-<!--            max-height: 350px;-->
-<!--            object-fit: cover;-->
-<!--        }-->
-
-
-
-<!--        .post-stat i {-->
-<!--            margin-right: 5px;-->
-<!--        }-->
-
-<!--        .post-actions {-->
-<!--            display: flex;-->
-<!--            justify-content: space-around;-->
-<!--            padding: 15px 20px;-->
-<!--        }-->
-
-<!--        .post-action {-->
-<!--            display: flex;-->
-<!--            align-items: center;-->
-<!--            color: #7f8c8d;-->
-<!--            cursor: pointer;-->
-<!--            transition: color 0.3s;-->
-<!--            padding: 8px 15px;-->
-<!--            border-radius: 6px;-->
-<!--        }-->
-
-<!--        .post-action:hover {-->
-<!--            background-color: #f8f9fa;-->
-<!--            color: #0066cc;-->
-<!--        }-->
-
-<!--        .post-action i {-->
-<!--            margin-right: 8px;-->
-<!--            font-size: 16px;-->
-<!--        }-->
-
-
-<!--        .job-caption {-->
-<!--            margin-top:16px;-->
-<!--            display:flex;-->
-<!--            flex-wrap:wrap;-->
-<!--            gap:10px;-->
-<!--        }-->
-
-<!--        .caption-item {-->
-<!--            background:#f0f6ff;-->
-<!--            color:#1f3a60;-->
-<!--            padding:8px 14px;-->
-<!--            border-radius:20px;-->
-<!--            font-size:13px;-->
-<!--            font-weight:600;-->
-<!--            display:inline-flex;-->
-<!--            align-items:center;-->
-<!--            gap:6px;-->
-<!--            box-shadow:0 2px 5px rgba(0,0,0,0.05);-->
-<!--            transition:background .2s ease, transform .15s ease;-->
-<!--        }-->
-
-<!--        .caption-item i {-->
-<!--            color:var(&#45;&#45;accent);-->
-<!--            font-size:14px;-->
-<!--        }-->
-
-<!--        .caption-item:hover {-->
-<!--            background:#e1eeff;-->
-<!--            transform:translateY(-2px);-->
-<!--        }-->
-<!--        .post-actions {-->
-<!--            display: flex;-->
-<!--            gap: 14px;-->
-<!--            margin: 14px 0;-->
-<!--            flex-wrap: wrap;-->
-<!--        }-->
-
-<!--        .post-action {-->
-<!--            background: #f0f6ff;-->
-<!--            color: #1f3a60;-->
-<!--            padding: 8px 14px;-->
-<!--            border-radius: 20px;-->
-<!--            font-size: 14px;-->
-<!--            font-weight: 600;-->
-<!--            display: inline-flex;-->
-<!--            align-items: center;-->
-<!--            gap: 6px;-->
-<!--            cursor: pointer;-->
-<!--            transition: background 0.2s ease, transform 0.15s ease;-->
-<!--            box-shadow: 0 2px 6px rgba(0,0,0,0.05);-->
-<!--        }-->
-
-<!--        .post-action i {-->
-<!--            color: #0066cc;-->
-<!--            font-size: 14px;-->
-<!--        }-->
-
-<!--        .post-action:hover {-->
-<!--            background: #e1eeff;-->
-<!--            transform: translateY(-2px);-->
-<!--        }-->
-
-
-<!--        /*=================================================*/-->
-<!--        #notificationContainer {-->
-<!--            margin-top: 100px;-->
-<!--            position: fixed;-->
-<!--            top: 20px;-->
-<!--            right: 2.5%;-->
-<!--            width: 95%;-->
-<!--            z-index: 1000;-->
-<!--            display: flex;-->
-<!--            flex-direction: column;-->
-<!--            gap: 12px;-->
-<!--        }-->
-
-<!--        .notification-card {-->
-<!--            display: flex;-->
-<!--            align-items: center;-->
-<!--            gap: 12px;-->
-<!--            background: rgba(255, 255, 255, 0.9);-->
-<!--            padding: 12px 14px;-->
-<!--            border-radius: 12px;-->
-<!--            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);-->
-<!--            opacity: 0;-->
-<!--            transform: translateX(120%);-->
-<!--            transition: opacity 0.4s ease, transform 0.4s ease;-->
-<!--            backdrop-filter: blur(8px);-->
-<!--            cursor: pointer;-->
-<!--        }-->
-
-<!--        .notification-card.show {-->
-<!--            opacity: 1;-->
-<!--            transform: translateX(0);-->
-<!--        }-->
-
-<!--        .company-logo {-->
-<!--            width: 48px;-->
-<!--            height: 48px;-->
-<!--            border-radius: 50%;-->
-<!--            object-fit: cover;-->
-<!--            flex-shrink: 0;-->
-<!--            border: 2px solid #ddd;-->
-<!--        }-->
-
-<!--        .notification-text {-->
-<!--            display: flex;-->
-<!--            flex-direction: column;-->
-<!--            overflow: hidden;-->
-<!--        }-->
-
-<!--        .notification-text h3 {-->
-<!--            margin: 0;-->
-<!--            font-size: 15px;-->
-<!--            font-weight: 600;-->
-<!--            color: #333;-->
-<!--            text-overflow: ellipsis;-->
-<!--            white-space: nowrap;-->
-<!--            overflow: hidden;-->
-<!--        }-->
-
-<!--        .notification-text span {-->
-<!--            font-size: 13px;-->
-<!--            color: #555;-->
-<!--            margin-top: 3px;-->
-<!--            line-height: 1.3;-->
-<!--        }-->
-
-
-
-
-
-
-
-<!--        @media (max-width: 600px) {-->
-<!--            .post-actions {-->
-<!--                flex-wrap: wrap;-->
-<!--            }-->
-
-<!--            .post-action {-->
-<!--                margin-bottom: 10px;-->
-<!--                flex-basis: 33.33%;-->
-<!--                justify-content: center;-->
-<!--            }-->
-
-<!--            body {-->
-<!--                padding: 10px;-->
-<!--            }-->
-<!--        }-->
-<!--    </style>-->
 </head>
 <body>
 <!-- HEADER -->
 <header class="topbar d-flex align-items-center justify-content-between px-3 sticky-top shadow-sm"
         style="background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); height:64px;">
     <!-- Brand / Logo -->
-    <div class="brand fw-bold fs-5 text-primary">WorkHub</div>
+    <div class="brand">
+        <i class="fas fa-briefcase"></i>
+        <span>WorkHub</span>
+    </div>
 
     <!-- Search Bar -->
     <div class="flex-grow-1 mx-3 d-none d-md-block">
         <form class="d-flex">
-            <input class="form-control form-control-sm rounded-pill" type="search" placeholder="Search..." aria-label="Search">
+            <input id="jobSearchBar" class="form-control form-control-sm rounded-pill" type="search" placeholder="Search..." aria-label="Search">
         </form>
     </div>
 
@@ -662,13 +239,35 @@
         </aside>
     </div>
 </div>
+
+<div id="locationModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Select Locations</h3>
+        <div id="map"></div>
+
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/UserHomePageJs.js"></script>
 <script src="js/UserPostJs.js"></script>
 <script src="js/CompanyProfileCard.js"></script>
+
+
+
+<script>
+    const searchBar = $("#jobSearchBar")
+
+    searchBar.on('input', function () {
+            searchBar.val()
+    });
+
+</script>
 
 <script>
     // Show profile preview
@@ -852,6 +451,104 @@
 
 
 </script>
+
+<script>
+
+    // Select all see location buttons
+    document.querySelectorAll(".openMapBtn").forEach(btn => {
+        btn.addEventListener("click", function() {
+            openModal();
+        });
+    });
+
+    // Open modal function
+    var map = L.map('map').setView([7.8731, 80.7718], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:'© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var markers = [];
+    var selectedLocations = [];
+    selectedLocations.push({
+        name: "Default Location",
+        lat: 7.8731,
+        lng: 80.7718
+    });
+
+    // Geocoder Search
+    // var geocoder = L.Control.geocoder({ defaultMarkGeocode: false })
+    //     .on('markgeocode', function(e) {
+    //         var center = e.geocode.center;
+    //         var name = e.geocode.name;
+    //         selectedLocations.push({name:name, lat:center.lat, lng:center.lng});
+    //         openModal();
+    //         map.setView(center, 12);
+    //     }).addTo(map);
+    //
+    // // Manual click select
+    // map.on('click', function(e){
+    //     selectedLocations.push({name:"Manual Selected", lat:e.latlng.lat, lng:e.latlng.lng});
+    //     openModal();
+    // });
+
+    // Modal open/close
+    function openModal(locationText) {
+        document.getElementById("locationModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+
+        setTimeout(()=> {
+            map.invalidateSize();
+
+            // Clear old markers
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+            selectedLocations = [];
+
+            if(locationText) {
+                // 🟢 Split by lines (1., 2., etc.)
+                let lines = locationText.split("\n");
+
+                lines.forEach(line => {
+                    // Find coordinates inside ()
+                    let match = line.match(/\(([-\d.]+),\s*([-\d.]+)\)/);
+                    if(match){
+                        let lat = parseFloat(match[1]);
+                        let lng = parseFloat(match[2]);
+
+                        // Name = line without coordinates
+                        let name = line.replace(/\(.*\)/, "").trim();
+
+                        selectedLocations.push({name, lat, lng});
+                    }
+                });
+            }
+
+            // Render all selected markers
+            selectedLocations.forEach(loc=>{
+                var marker = L.marker([loc.lat, loc.lng]).addTo(map)
+                    .bindPopup(loc.name + "<br>("+loc.lat.toFixed(4)+", "+loc.lng.toFixed(4)+")")
+                    .openPopup();
+                markers.push(marker);
+            });
+
+            // Fit map bounds to markers
+            if(markers.length>0){
+                var group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.2));
+            }
+
+        }, 300);
+    }
+
+
+    function closeModal() {
+        document.getElementById("locationModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+
+</script>
+
 
 <style>
     /* Hide scroll bar but keep scroll */

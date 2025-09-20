@@ -116,7 +116,11 @@ let jobs = [];
                         <i class="far fa-comments"></i> Chat
                     </div>
                     <div class="post-action">
-                        <i class="fas fa-map-marker-alt"></i> location
+                        <textarea  hidden readonly id="jobLocations-${job.id}"> ${job.location}</textarea>
+                        <button type="button" class="openMap" onclick="openModal(document.getElementById('jobLocations-${job.id}').value)" >
+                         <i class="fas fa-map-marker-alt" id="location"></i> see location
+                        </button>
+
                     </div>
                 </div>
             `;
