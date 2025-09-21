@@ -39,6 +39,31 @@
         /* Popup marker custom style */
         .leaflet-popup-content-wrapper { border-radius:8px; border:1px solid #4CAF50; }
         .leaflet-popup-content { font-size:14px; line-height:1.4; }
+
+        #suggestions {
+            display: none;
+            position: absolute;
+            top: 10px;
+            /*left: 0;*/
+            /*right: 0;*/
+            z-index: 1050;
+            border-radius: 0 0 0.5rem 0.5rem;
+            max-height: 220px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.35);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-top: 40px;
+        }
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background: #f0f0f0;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
@@ -85,7 +110,8 @@
     <!-- Search Bar -->
     <div class="flex-grow-1 mx-3 d-none d-md-block">
         <form class="d-flex">
-            <input id="jobSearchBar" class="form-control form-control-sm rounded-pill" type="search" placeholder="Search..." aria-label="Search">
+            <input id="jobSearchBar" class="form-control form-control-sm rounded-pill" type="search" placeholder="Search..." aria-label="Search" autocomplete="off">
+            <div id="suggestions" class="suggestions list-group shadow-sm"></div>
         </form>
     </div>
 
@@ -261,11 +287,103 @@
 
 
 <script>
-    const searchBar = $("#jobSearchBar")
+    const searchBar = $("#jobSearchBar");
+    const suggestions = $("#suggestions");
+    let token = localStorage.getItem("token");
 
     searchBar.on('input', function () {
-            searchBar.val()
+        const query = searchBar.val().trim();
+        if (query.length < 1) {
+            suggestions.hide();
+            return;
+        }
+        fetch(`http://localhost:8080/user/searchJob?query=${query}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+            .then(response => {
+                console.log(response.data)
+
+                const uniqueJobs = [...new Set(response.data)];
+                suggestions.empty();
+
+                if (uniqueJobs.length > 0) {
+                    uniqueJobs.forEach(job => {
+                        suggestions.append(`
+              <button type="button"
+                      class="list-group-item list-group-item-action small py-2">
+                ${job}
+              </button>`);
+                    });
+                    suggestions.show();
+                } else {
+                    suggestions.hide();
+                }
+            });
     });
+    // click handler
+    $(document).on("click", "#suggestions .list-group-item", function () {
+        const selected = $(this).text().trim();
+        searchBar.val("");
+        searchBar.val(selected);
+        suggestions.hide();
+        getSearched(selected);
+
+
+    });
+
+    // hide when clicking outside
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest("#jobSearchBar, #suggestions").length) {
+            suggestions.hide();
+        }
+    });
+
+
+
+    function getSearched(query) {
+        page = 0;
+        jobs = [];
+        const token = localStorage.getItem('token')
+
+        fetch(`http://localhost:8080/user/getSearchJob?query=${query}`, {
+            method:'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(res => res.json())
+            .then(response => {
+                const newJobs = response.data; // API එකේ page එකේ posts
+
+                if (newJobs.length > 0) {
+                    console.log("search result");
+                    console.log("length "+ newJobs.length)
+                    newJobs.forEach(job => {
+                        // if (!jobs.some(j => j.id === job.id)) { // check duplicate by ID
+                            jobs.push(job);
+                            renderPosts([job]);
+                            // render one by one
+                        // }
+                    });
+                }
+
+                else {
+                    window.removeEventListener("scroll", loadOnScroll); // ✅ remove properly
+
+                    console.log("No more posts");
+                }
+            })
+            .finally(() => {
+                loading = false; // finish loading
+            });
+    }
+
+
 
 </script>
 

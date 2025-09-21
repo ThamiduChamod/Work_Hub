@@ -132,4 +132,30 @@ public class UserPostService {
     }
 
 
+    public List<JobPostDTO> getJob(String query) {
+
+        List<JobPost> byJobType = jobPostRepository.findByJobType(query);
+
+        System.out.println(byJobType);
+
+
+        return byJobType.stream()
+
+
+                .map(post -> {
+                    JobPostDTO dto = modelMapper.map(post, JobPostDTO.class);
+                    dto.setUsername(post.getUser().getId());
+                    dto.setJobImagePath(imagePath.getBase64FromFile(post.getJobImagePath()));
+                    return dto;
+                })
+                .toList();
+    }
+
+    public List<String> getJobTitle(String query) {
+
+        List<String> jobTitleByJobTitleLike = jobPostRepository.findJobTitleByJobTitleLike(query + "%");
+
+        System.out.println(jobTitleByJobTitleLike);
+        return jobTitleByJobTitleLike;
+    }
 }

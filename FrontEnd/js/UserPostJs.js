@@ -7,11 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 let page = 0;
-let size = 2;
+let size = 4;
 let loading = false; // prevent multiple calls at once
 
 function loadOnScroll() {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100 && !loading) {
+        if (!$("#jobSearchBar").val())
         getAllPost();
     }
 }
@@ -22,7 +23,12 @@ window.addEventListener("scroll", loadOnScroll); // function pass කරනව�
 
 
 let jobs = [];
+let postCount =0;
+
+
     function getAllPost() {
+        console.log("get all Post")
+
             const token = localStorage.getItem('token')
 
         fetch(`http://localhost:8080/user/allPost?page=${page}&size=${size}`, {
@@ -36,15 +42,27 @@ let jobs = [];
                 const newJobs = response.data; // API එකේ page එකේ posts
 
                 if (newJobs.length > 0) {
+                    console.log(newJobs.length)
                     newJobs.forEach(job => {
                         if (!jobs.some(j => j.id === job.id)) { // check duplicate by ID
                             jobs.push(job);
+                            console.log(job)
                             renderPosts([job]);
                            // render one by one
+
+                            // postCount++;
+                            // if (postCount === 4) {
+                            //     page++;
+                            //     postCount =0
+                            //     console.log("page size" + page)
+                            // }
                         }
                     });
-                    page++;
+                    page++
+                        console.log("page size" + page)
+
                 }
+
                 else {
                     window.removeEventListener("scroll", loadOnScroll); // ✅ remove properly
 
@@ -71,7 +89,8 @@ let jobs = [];
 });
 }
 
-    function renderPosts() {
+    function renderPosts([job]) {
+
         const container = document.getElementById("previewContainer");
 
         container.innerHTML = ""; // clear before rendering
@@ -127,6 +146,7 @@ let jobs = [];
 
             container.appendChild(card);
         });
+
     }
 
     let image =""

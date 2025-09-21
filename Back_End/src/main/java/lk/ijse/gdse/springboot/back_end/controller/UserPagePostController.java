@@ -75,7 +75,24 @@ public class UserPagePostController {
         );
     }
 
+    @GetMapping("/searchJob")
+    public APIResponse search(@RequestParam String query) {
+        return new APIResponse(
+                200,
+                "search",
+                userPostService.getJobTitle(query)
+        );
+    }
 
+    @GetMapping("/getSearchJob")
+    public APIResponse getSearchedJob(@RequestParam String query){
+        System.out.println(query);
+        return new APIResponse(
+                200,
+                "search",
+                userPostService.getJob(query)
+        );
+    }
 
 
 
