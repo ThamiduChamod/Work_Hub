@@ -13,10 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -64,4 +60,14 @@ public class CompanyPostService {
         );
     }
 
+    public boolean deletePost(long postId) {
+
+        try {
+            jobPostRepository.deleteById( postId);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
+    }
 }

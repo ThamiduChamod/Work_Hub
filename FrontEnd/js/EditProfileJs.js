@@ -78,13 +78,62 @@ $("#saveBtn").on("click", async function () {
     })
         .then(response => {
             if (response.status === 403) {
-                throw new Error('403 Forbidden - Check if your role is correctly set to ROLE_COMPANY');
-            }
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "Save UnSuccessfully"
+                });            }
             if (!response.ok) {
-                throw new Error('HTTP error ' + response.status);
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "Save UnSuccessfully"
+                });
             }
             console.log(response.json())
-            // return response.json();
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "success",
+                title: "Save Successfully"
+            });
+            setTimeout(() => {
+                console.log("5 seconds passed!");
+                window.location.assign("companyMainPage.html");
+                }, 4000); // 5000 milliseconds = 5 seconds
+
+
+
+
         })
 
 

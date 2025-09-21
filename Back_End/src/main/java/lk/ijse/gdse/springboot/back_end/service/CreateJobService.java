@@ -86,7 +86,7 @@ public class CreateJobService {
             notification.setUser(follower);
             notification.setMessage("New post from " + companyProfile.getCompanyName());
             notification.setJobPost(jobPost);
-            notification.setImage(companyProfile.getProfileImagePath());
+//            notification.setImage(companyProfile.getProfileImagePath());
 
             try {
                 Notification saved = notificationRepository.save(notification);

@@ -193,6 +193,43 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+
+    if (!token || isTokenExpired(token)) {
+      // Token missing or expired → redirect to login
+      window.location.replace("login.html");
+      return;
+    }
+
+    // Token valid → load posts
+    getAllPost();
+  });
+  function isTokenExpired(token) {
+    const payload = parseJwt(token);
+    if (!payload || !payload.exp) return true;
+
+    const now = Math.floor(Date.now() / 1000); // current time in seconds
+    return payload.exp < now; // true if expired
+  }
+  function parseJwt(token) {
+    if (!token) return null;
+
+    try {
+      let base64Url = token.split('.')[1];
+      let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      let jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (err) {
+      console.error("Invalid token:", err);
+      return null;
+    }
+  }
+
+
+
   document.addEventListener('DOMContentLoaded', function() {
     // Form input listeners for live preview
     const formInputs = document.querySelectorAll('.form-input, .form-textarea');
@@ -308,9 +345,30 @@
 
     // Cancel button
     document.querySelector('.cancel-btn').addEventListener('click', function() {
-      if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
-        window.location.reload();
-      }
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, go home page"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success"
+          });
+
+
+          setTimeout(() => {
+            console.log("5 seconds passed!");
+            window.location.assign("companyMainPage.html");
+          }, 2000); // 5000 milliseconds = 5 seconds
+        }
+      });
+
     });
   });
 

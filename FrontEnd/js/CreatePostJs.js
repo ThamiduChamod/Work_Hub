@@ -39,7 +39,7 @@ let base64String = '';
 
      fields.forEach(selector => {
          const field = $(selector);
-         if (!field.val().trim()) {
+         if (!field.val()) {
              field.css("border-color", "red"); // empty → red
              isValid = false;                  // mark as invalid
          } else {
@@ -77,10 +77,10 @@ let base64String = '';
 
 post.on('click', function () {
 
-    if (!fillAll()) {
-        return;
-        // proceed with building jobData object / submit Ajax
-    }
+    // if (!fillAll()) {
+    //     return;
+    //     // proceed with building jobData object / submit Ajax
+    // }
 
     console.log($('#jobTitle').val())
     console.log($('#address').val())
@@ -150,7 +150,7 @@ post.on('click', function () {
         });
         Toast.fire({
             icon: "success",
-            title: "Post Create successfully"
+            title: "SAVE successfully"
         });
         window.location.href = "companyMainPage.html";
         // return response.json();

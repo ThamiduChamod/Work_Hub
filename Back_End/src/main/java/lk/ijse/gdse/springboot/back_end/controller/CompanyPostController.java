@@ -4,7 +4,6 @@ import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
 import lk.ijse.gdse.springboot.back_end.service.CompanyPostService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +34,15 @@ public class CompanyPostController {
                 200,
                 "get Profile",
                 companyPostService.getProfilePitcherAndName(userID)
+        );
+    }
+
+    @DeleteMapping("/deletePost")
+    public APIResponse deletePost(@RequestParam long postId) {
+        return new APIResponse(
+                200,
+                "deleted",
+                companyPostService.deletePost(postId)
         );
     }
 

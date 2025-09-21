@@ -162,15 +162,18 @@ public class UserProfileService {
 
     public List<NotificationDTO> getNotifications(String userName) {
         User user = userRepository.findUserByUsername(userName);
+
         List<Notification> notifications = notificationRepository.findAllByUserOrderByIdDesc(user);
+
 //        CompanyProfile profile = companyProfileRepository.findCompanyProfileByUser();
         return notifications.stream()
                 .map(notification -> {
+                    CompanyProfile profile = companyProfileRepository.findCompanyProfileByUser(notification.getJobPost().getUser());
                     System.out.println(notification.getJobPost().getUser().getCompanyProfile().getCompanyName());
                     NotificationDTO dto = new NotificationDTO();
                     dto.setMessage(notification.getMessage());
                     dto.setCompanyName(notification.getJobPost().getUser().getCompanyProfile().getCompanyName());
-                    dto.setProfileImage(imagePath.getBase64FromFile(notification.getImage()));
+                    dto.setProfileImage(imagePath.getBase64FromFile(profile.getProfileImagePath()));
                     return dto;
                 })
                 .toList();

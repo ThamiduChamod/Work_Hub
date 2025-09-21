@@ -10,7 +10,7 @@ body {
     right: 0;
     top: 0;
     bottom: 0;
-    background: #f6f5f7;
+    /*background: #f6f5f7;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,6 +18,10 @@ body {
     font-family: 'Montserrat', sans-serif;
     height: 100%;
     /*margin: -20px 0 50px;*/
+    background-image: url("FrontEnd/image/background.jpg");
+    background-size: cover;       /* cover the entire screen */
+    background-repeat: no-repeat; /* don’t repeat */
+    background-position: center;  /
 }
 
 h1 {
@@ -86,7 +90,7 @@ form {
 }
 
 input {
-    background-color: #eee;
+    background-color:rgba(255, 255, 255, 0.15); ;
     border: none;
     padding: 12px 15px;
     margin: 8px 0;
@@ -94,7 +98,7 @@ input {
 }
 
 .container {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.15); ;
     border-radius: 10px;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25),
     0 10px 10px rgba(0,0,0,0.22);
@@ -166,7 +170,7 @@ input {
 .overlay {
     /*background: #FF416C;*/
     /*background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);*/
-    background:linear-gradient(to right, #0fd850 0%, #f9f047 100%);
+    background:linear-gradient(to right, #0fa2d8 0%, #77bc20 100%);
     /*background: linear-gradient(to right, #FF4B2B, #FF416C);*/
     background-repeat: no-repeat;
     background-size: cover;

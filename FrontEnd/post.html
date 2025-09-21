@@ -63,6 +63,7 @@
 
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <script>
@@ -141,9 +142,13 @@
                         <i class="far fa-clock"></i> <span>${formatDateTime(job.createdAt)}</span>
                     </div>
                 </div>
-                <div class="post-menu">
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
+                <div class="post-menu" id="delete${job.id}" style="position: relative; cursor: pointer;">
+    <i class="fas fa-ellipsis-h"></i>
+    <div class="dropdown-menu" id="dropdown${job.id}" style="display:none; position:absolute; top:20px; right:0; background:white; border:1px solid #ccc; border-radius:5px; z-index:10;">
+        <div class="dropdown-item" id="deletePost${job.id}" style="padding:5px 10px; cursor:pointer;">Delete</div>
+    </div>
+</div>
+
             </div>
 
             <div class="post-content">
@@ -176,6 +181,86 @@
 
             container.appendChild(card);
 
+        document.addEventListener("click", (e) => {
+
+
+            if (e.target.id.startsWith("deletePost")) {
+                const jobId = e.target.id.replace("deletePost", "");
+                console.log("Delete job with ID:", jobId);
+
+                function deleteTis() {
+                    // Example: call API to delete
+                    const token = localStorage.getItem("token");
+                    fetch(`http://localhost:8080/company/deletePost?postId=${jobId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    }).then(res => res.json())
+                        .then(response => {
+                            const isDelete =  response.data; // data object එක
+                            console.log(isDelete.valueOf());
+                            if (isDelete){
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.onmouseenter = Swal.stopTimer;
+                                        toast.onmouseleave = Swal.resumeTimer;
+                                    }
+                                });
+                                Toast.fire({
+                                    icon: "success",
+                                    title: "Delete successfully"
+                                });
+                                document.getElementById(`delete${jobId}`).closest(".post-card").remove();
+
+                                return;
+                            }
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                            });
+                            Toast.fire({
+                                icon: "error",
+                                title: "Delete unsuccessfully"
+                            });
+
+                            // console.log(jobs);    // Software Development
+                        });
+                }
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                        });
+                        deleteTis()
+                    }
+                });
+
+            }
+        });
 
     }
     function formatDateTime(timestamp) {
@@ -194,6 +279,30 @@
     }
 
     console.log(formatDateTime("2025-09-14T08:56:33.942+05:30"));
+
+
+    document.addEventListener("click", (e) => {
+        // Check if clicked on the post-menu icon
+        if (e.target.closest(".post-menu")) {
+            const menu = e.target.closest(".post-menu");
+            const jobId = menu.id.replace("delete", "");
+            const dropdown = document.getElementById(`dropdown${jobId}`);
+
+            // Toggle display
+            if (dropdown.style.display === "none") {
+                dropdown.style.display = "block";
+            } else {
+                dropdown.style.display = "none";
+            }
+        } else {
+            // Clicked outside → hide all dropdowns
+            document.querySelectorAll(".dropdown-menu").forEach(d => d.style.display = "none");
+        }
+    });
+
+
+
+
 
 
 </script>

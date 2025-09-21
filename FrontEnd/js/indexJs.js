@@ -170,9 +170,9 @@ signup_btn.on("click", function () {
                     console.log("User role:", payload.role);
 
 
-                    if (payload.role === "COMPANY") {
+                    if (payload.role === "ROLE_COMPANY") {
                         window.location.assign("companyMainPage.html");
-                    } else if (payload.role === "USER") {
+                    } else if (payload.role === "ROLE_USER") {
                         window.location.assign("UserHomePage.html");
                     } else {
                         alert("Unknown role!"); // fallback
@@ -382,9 +382,9 @@ companySignUPBtn.on("click", function () {
                     console.log("User role:", payload.role);
 
 
-                    if (payload.role === "COMPANY") {
+                    if (payload.role === "ROLE_COMPANY") {
                         window.location.assign("companyMainPage.html");
-                    } else if (payload.role === "USER") {
+                    } else if (payload.role === "ROLE_USER") {
                         window.location.assign("UserHomePage.html");
                     } else {
                         alert("Unknown role!"); // fallback
