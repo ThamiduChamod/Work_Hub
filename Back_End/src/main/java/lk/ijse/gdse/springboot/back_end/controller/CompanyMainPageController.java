@@ -3,11 +3,10 @@ package lk.ijse.gdse.springboot.back_end.controller;
 
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
 import lk.ijse.gdse.springboot.back_end.dto.CompanyProfileDTO;
-import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
+
 import lk.ijse.gdse.springboot.back_end.service.CompanyService;
+import lk.ijse.gdse.springboot.back_end.service.impl.CompanyServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

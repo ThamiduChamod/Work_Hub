@@ -1,44 +1,14 @@
 package lk.ijse.gdse.springboot.back_end.service;
 
+
 import lk.ijse.gdse.springboot.back_end.dto.FollowersDTO;
-import lk.ijse.gdse.springboot.back_end.entity.CompanyProfile;
-import lk.ijse.gdse.springboot.back_end.entity.Followers;
-import lk.ijse.gdse.springboot.back_end.entity.User;
-import lk.ijse.gdse.springboot.back_end.entity.UserProfile;
-import lk.ijse.gdse.springboot.back_end.repository.CompanyProfileRepository;
-import lk.ijse.gdse.springboot.back_end.repository.FollowRepository;
-import lk.ijse.gdse.springboot.back_end.repository.UserProfileRepository;
-import lk.ijse.gdse.springboot.back_end.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+public interface FollowService {
 
-@Service
-@RequiredArgsConstructor
-public class FollowService {
-    private final UserRepository userRepository;
-    private final FollowRepository followRepository;
-    private final CompanyProfileRepository companyProfileRepository;
-    private final UserProfileRepository userProfileRepository;
-
-    public boolean addFollower(FollowersDTO followersDTO) {
-        User user = userRepository.findUserByUsername(followersDTO.getUserName());
-
-        CompanyProfile byId = companyProfileRepository.findById(followersDTO.getCompany_id());
-        if (byId == null) return false;
-
-        UserProfile userProfile = userProfileRepository.findAllByUser(user);
-
-
-        try {
-            Followers followers = new Followers();
-            followers.setUser(userProfile);
-            followers.setCompany(byId);
-            followRepository.save(followers);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
-    }
+    /**
+     * Add a follower for a company.
+     * @param followersDTO contains username of user and company id
+     * @return true if added successfully, false otherwise
+     */
+    boolean addFollower(FollowersDTO followersDTO);
 }

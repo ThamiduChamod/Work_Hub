@@ -20,6 +20,7 @@ public class Chat {
     @ManyToOne
     private CompanyProfile companyProfile;
 
+    @Column(length = 200000)
     private String message;
     private String image;
 

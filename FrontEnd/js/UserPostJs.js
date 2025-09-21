@@ -12,8 +12,9 @@ let loading = false; // prevent multiple calls at once
 
 function loadOnScroll() {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100 && !loading) {
-        if (!$("#jobSearchBar").val())
-        getAllPost();
+        if (!$("#jobSearchBar").val()) {
+            getAllPost();
+        }
     }
 }
 
@@ -202,6 +203,7 @@ $(document).on("click", "[id^=chat]", function () {
     const token = localStorage.getItem("token");
     let userName = parseJwt(token).sub;
     console.log(userName);
+    console.log(jobId);
 
     // Encode special characters in URL
     window.location.assign(`chat.html?jobId=${jobId}&userName=${encodeURIComponent(userName)}`);

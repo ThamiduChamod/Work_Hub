@@ -799,22 +799,11 @@
     document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('token');
 
-        if (!token || isTokenExpired(token)) {
-            // Token missing or expired → redirect to login
-            window.location.replace("login.html");
-            return;
-        }
+
 
         // Token valid → load posts
-        getAllPost();
+        // getAllPost();
     });
-    function isTokenExpired(token) {
-        const payload = parseJwt(token);
-        if (!payload || !payload.exp) return true;
-
-        const now = Math.floor(Date.now() / 1000); // current time in seconds
-        return payload.exp < now; // true if expired
-    }
     function parseJwt(token) {
         if (!token) return null;
 
@@ -983,9 +972,12 @@
     console.log("Job ID:", jobId);          // 51
     console.log("Username:", decodeURIComponent(user)); // shehan.nethsara2003@gmail.com
 
+    let saveId= jobId
+    if(jobId > -1){
 
-    if(jobId !== -1&& jobId > -1){
        openChat(jobId)
+        console.log('open chat')
+        console.log(jobId)
    }else {
         loadChats(userName)
     }
@@ -1221,6 +1213,7 @@
            setChatUserInfo(company)
            loadConversation(contactId,company,chat);
            chatId = contactId
+           console
            // Add logic to load chat messages dynamically
        }
    }
@@ -1340,14 +1333,6 @@
         }
     }
 
-    function parseJwt(token) {
-        let base64Url = token.split('.')[1];
-        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    }
 
 
 

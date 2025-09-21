@@ -2,9 +2,9 @@ package lk.ijse.gdse.springboot.back_end.controller;
 
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
 import lk.ijse.gdse.springboot.back_end.dto.CompanyProfileDTO;
+
 import lk.ijse.gdse.springboot.back_end.service.CompanyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

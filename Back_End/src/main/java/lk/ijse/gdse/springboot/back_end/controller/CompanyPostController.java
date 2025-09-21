@@ -2,6 +2,7 @@ package lk.ijse.gdse.springboot.back_end.controller;
 
 import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
 import lk.ijse.gdse.springboot.back_end.service.CompanyPostService;
+import lk.ijse.gdse.springboot.back_end.service.impl.CompanyPostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;

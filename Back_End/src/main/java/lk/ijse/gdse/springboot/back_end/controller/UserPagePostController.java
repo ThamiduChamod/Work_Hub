@@ -4,8 +4,11 @@ import lk.ijse.gdse.springboot.back_end.dto.APIResponse;
 import lk.ijse.gdse.springboot.back_end.dto.FollowersDTO;
 import lk.ijse.gdse.springboot.back_end.dto.JobPostDTO;
 import lk.ijse.gdse.springboot.back_end.dto.ProfilePhotoNameDTO;
+
 import lk.ijse.gdse.springboot.back_end.service.FollowService;
 import lk.ijse.gdse.springboot.back_end.service.UserPostService;
+import lk.ijse.gdse.springboot.back_end.service.impl.FollowServiceImpl;
+import lk.ijse.gdse.springboot.back_end.service.impl.UserPostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

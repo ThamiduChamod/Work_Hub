@@ -1,9 +1,14 @@
 package lk.ijse.gdse.springboot.back_end.controller;
 
 import lk.ijse.gdse.springboot.back_end.dto.*;
+
+
 import lk.ijse.gdse.springboot.back_end.service.CompanyService;
 import lk.ijse.gdse.springboot.back_end.service.UserPostService;
 import lk.ijse.gdse.springboot.back_end.service.UserProfileService;
+import lk.ijse.gdse.springboot.back_end.service.impl.CompanyServiceImpl;
+import lk.ijse.gdse.springboot.back_end.service.impl.UserPostServiceImpl;
+import lk.ijse.gdse.springboot.back_end.service.impl.UserProfileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
