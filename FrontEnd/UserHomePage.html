@@ -118,11 +118,11 @@
     <!-- Profile + Messenger -->
     <div class="d-flex align-items-center gap-3">
         <!-- Messenger Icon -->
-        <button class="btn btn-light btn-sm rounded-circle position-relative">
+        <button id="chatBtn" class="btn btn-light btn-sm rounded-circle position-relative">
             💬
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                3
-            </span>
+<!--            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
+<!--                -->
+<!--            </span>-->
         </button>
 
         <!-- Profile Dropdown -->
@@ -382,6 +382,17 @@
                 loading = false; // finish loading
             });
     }
+
+
+    document.getElementById("chatBtn").addEventListener("click", () => {
+        const jobId = -1
+        const token = localStorage.getItem("token");
+        const userName = parseJwt(token).sub;
+        console.log("chatss")
+        // Navigate to chat page
+        window.location.assign(`chat.html?jobId=${jobId}&userName=${encodeURIComponent(userName)}`);
+    });
+
 
 
 

@@ -957,7 +957,12 @@
     let chatId = -1;
     function loadChats(username) {
         const token = localStorage.getItem('token')
-        fetch(`http://localhost:8080/company/searchChats?username=${username}`, {
+        const role =parseJwt(token).role;
+        let link = "user";
+        if(role === "ROLE_COMPANY"){
+            link = "company"
+        }
+        fetch(`http://localhost:8080/${link}/searchChats?username=${username}`, {
             method:'GET',
             headers:{
                 'Content-Type': 'application/json',

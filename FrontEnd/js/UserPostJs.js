@@ -27,6 +27,8 @@ let postCount =0;
 
 
     function getAllPost() {
+        // if (loading) return; // prevent duplicate calls
+        // loading = true;
         console.log("get all Post")
 
             const token = localStorage.getItem('token')
@@ -64,6 +66,7 @@ let postCount =0;
                 }
 
                 else {
+                    // window.removeEventListener("scroll", loadOnScroll);
                     window.removeEventListener("scroll", loadOnScroll); // ✅ remove properly
 
                     console.log("No more posts");
@@ -92,8 +95,11 @@ let postCount =0;
     function renderPosts([job]) {
 
         const container = document.getElementById("previewContainer");
+        // if ($("#jobSearchBar").val()){
+            container.innerHTML = ""; // clear before rendering
+        // }
 
-        container.innerHTML = ""; // clear before rendering
+
 
         jobs.forEach(job => {
             postHeader(job.username, job.id);
@@ -122,7 +128,7 @@ let postCount =0;
                         <span class="caption-item"><i class="fas fa-dollar-sign"></i> ${job.salaryRange}</span>
                         <span class="caption-item"><i class="fas fa-tools"></i> ${job.skills}</span>
                         <span class="caption-item"><i class="fas fa-clock"></i> ${job.jobType}</span>
-                        <span class="caption-item"><i class="fas fa-users"></i> ${job.applicants} Applicants</span>
+                        <span class="caption-item"><i class="fas fa-users"></i> ${job.jobTitle} </span>
                     </div>
 
                     <p class="post-text">${job.jobDescription}</p>
